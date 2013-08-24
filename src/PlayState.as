@@ -8,24 +8,32 @@ package
 	 */
 	public class PlayState extends FlxState 
 	{
+		private const POINTS_PER_LEVEL:int = 1000;
 		
-		private var player:Player;
+		private var _player:Player;
+		private var _levelCounter:int;
+		private var _pointTarget:int;
+		private var _timer:Number;
 		
-		override public function create():void
+		public override function create():void
 		{
 			add(Bullet.playerBullets);
 			add(Bullet.enemyBullets);
-			player = new Player(100, 100);
-			add(player);
+			_player = new Player(100, 100);
+			add(_player);
 			var path:Vector.<FlxPoint> = new Vector.<FlxPoint>;
 			path.push(new FlxPoint(10, 10), new FlxPoint(50, 50), new FlxPoint(10, 140), new FlxPoint(300, 200), new FlxPoint(450, 300), new FlxPoint(600, 10));
 			add(new Enemy(10, 10, 10, path, 800));
+			_levelCounter = 0;
+			levelUp();
+			_timer = 0;
 		}
 		
 		override public function update():void
 		{
 			handleInput();
-			FlxG.collide(player, Bullet.enemyBullets, Player.bulletCollision);
+			handleCollisions();
+			handleScore();
 			super.update();
 		}
 		
@@ -42,10 +50,33 @@ package
 			if (FlxG.keys.DOWN)
 				++yDirection;
 			
-			player.move(xDirection, yDirection);
+			_player.move(xDirection, yDirection);
 			
 			if (FlxG.keys.SPACE)
-				player.shoot();
+				_player.shoot();
+		}
+		
+		private function handleCollisions():void
+		{
+			FlxG.collide(_player, Bullet.enemyBullets, Player.bulletCollision);
+		}
+		
+		private function handleScore():void
+		{
+			_timer += FlxG.elapsed;
+			if (_timer >= 10)
+			{
+				_timer = 0;
+				if (FlxG.score >= _pointTarget)
+					levelUp();
+				else
+					;// end the game
+			}
+		}
+		
+		private function levelUp():void
+		{
+			_pointTarget = FlxG.score + (POINTS_PER_LEVEL * ++_levelCounter);
 		}
 	}
 
