@@ -13,6 +13,8 @@ package
 		
 		override public function create():void
 		{
+			add(Bullet.playerBullets);
+			add(Bullet.enemyBullets);
 			player = new Player(100, 100);
 			add(player);
 		}
@@ -20,6 +22,7 @@ package
 		override public function update():void
 		{
 			handleInput();
+			FlxG.collide(player, Bullet.enemyBullets);
 			super.update();
 		}
 		
@@ -27,16 +30,19 @@ package
 		{
 			var xDirection:int = 0;
 			var yDirection:int = 0;
-			if (FlxG.keys.pressed("LEFT"))
+			if (FlxG.keys.LEFT)
 				--xDirection;
-			if (FlxG.keys.pressed("RIGHT"))
+			if (FlxG.keys.RIGHT)
 				++xDirection;
-			if (FlxG.keys.pressed("UP"))
+			if (FlxG.keys.UP)
 				--yDirection;
-			if (FlxG.keys.pressed("DOWN"))
+			if (FlxG.keys.DOWN)
 				++yDirection;
 			
 			player.move(xDirection, yDirection);
+			
+			if (FlxG.keys.SPACE)
+				player.shoot();
 		}
 	}
 
