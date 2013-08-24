@@ -7,11 +7,13 @@ package enemies
 	 */
 	public class Fighter extends Enemy 
 	{
+		[Embed(source = "../assets/images/fighter.png")] private var sprite:Class
+		
 		private static const PATHS:Vector.<Vector.<FlxPoint>> = new Vector.<Vector.<FlxPoint>>;
-		private const HEALTH:int = 3;
-		private const SPEED:Number = 400;
-		private const SHOOT_TIME:Number = 0.7;
-		private const BULLET_SPEED:Number = 800;
+		private static const HEALTH:int = 3;
+		private static const SPEED:Number = 200;
+		private static const SHOOT_TIME:Number = 0.7;
+		private static const BULLET_SPEED:Number = 400;
 		
 		private static function initialize():void
 		{
@@ -47,8 +49,7 @@ package enemies
 		
 		public function Fighter(x:Number, y:Number) 
 		{
-			super(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], REVERSE, SPEED);
-			makeGraphic(30, 30, 0xffffffff);
+			super(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], REVERSE, SPEED, sprite);
 			resetFighter(x, y, true);
 		}
 		
@@ -65,14 +66,14 @@ package enemies
 			if (_shootTimer >= SHOOT_TIME)
 			{
 				_shootTimer = 0;
-				Bullet.getNewEnemyBullet(x + (width / 2), y + height, new FlxPoint(0, BULLET_SPEED), 0);
+				Bullet.getNewEnemyBullet(x + (width / 2), y + height, new FlxPoint(0, BULLET_SPEED), 0, 0xFF343399);
 			}
 			super.update();
 		}
 		
 		private static const PATH_STRINGS:Array = [
-			"0,0; 600,0",
-			"0,0; 27,-45; 72,-72; 117,-45; 144,0; 171,45; 216,72; 261,45; 288,0; 315,-45; 360,-72; 405,-45; 432,0; 459,45; 504,72; 549,45; 576,0"
+			"0,0; 300,0",
+			"0,0; 13,-22; 36,-36; 58,-22; 72,0; 85,22; 108,36; 130,22; 144,0; 157,-22; 180,-36; 202,-22; 216,0; 230,22; 252,36; 275,22; 288,0"
 		];
 	}
 

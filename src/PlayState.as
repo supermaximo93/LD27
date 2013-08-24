@@ -9,7 +9,8 @@ package
 	 */
 	public class PlayState extends FlxState 
 	{
-		private const POINTS_PER_LEVEL:int = 1000;
+		private static const POINTS_PER_LEVEL:int = 1000;
+		private static const BACKGROUND_PARTICLE_TIME:Number = 0.001;
 		
 		private static var _instance:PlayState;
 		
@@ -25,11 +26,13 @@ package
 		private var _timer:Number;
 		private var _timerText:FlxText;
 		private var _scoreText:FlxText;
+		private var _backgroundParticleTimer:Number;
 		
 		public override function create():void
 		{
 			_instance = this;
-			FlxG.bgColor = 0xff8cc5d9;
+			FlxG.bgColor = 0xFFFFB8B3;
+			add(BackgroundParticle.backgrounParticles);
 			add(Bullet.playerBullets);
 			add(Bullet.enemyBullets);
 			_enemies = new FlxGroup;
@@ -46,6 +49,7 @@ package
 			_scoreText = new FlxText(10, 10, 100);
 			add(_timerText);
 			add(_scoreText);
+			_backgroundParticleTimer = 0;
 			
 			Turret.getNewTurret(10, 10);
 			Fighter.getNewFighter(30, 30);
@@ -62,12 +66,16 @@ package
 		{
 			handleInput();
 			handleCollisions();
-			handleScore();
+			updateScore();
+			updateBackgroundParticles();
 			super.update();
 		}
 		
 		private function handleInput():void
 		{
+			if (!_player.alive)
+				return;
+			
 			var xDirection:int = 0;
 			var yDirection:int = 0;
 			if (FlxG.keys.LEFT)
@@ -91,7 +99,7 @@ package
 			FlxG.overlap(_enemies, Bullet.playerBullets, Enemy.bulletCollision);
 		}
 		
-		private function handleScore():void
+		private function updateScore():void
 		{
 			_timer += FlxG.elapsed;
 			if (_timer >= 10)
@@ -109,6 +117,16 @@ package
 		private function levelUp():void
 		{
 			_pointTarget = FlxG.score + (POINTS_PER_LEVEL * ++_levelCounter);
+		}
+		
+		private function updateBackgroundParticles():void
+		{
+			_backgroundParticleTimer += FlxG.elapsed;
+			if (_backgroundParticleTimer >= BACKGROUND_PARTICLE_TIME)
+			{
+				_backgroundParticleTimer -= BACKGROUND_PARTICLE_TIME;
+				BackgroundParticle.getNewBackgroundParticle();
+			}
 		}
 	}
 

@@ -21,26 +21,26 @@ package
 			return _enemyBullets;
 		}
 		
-		public static function getNewPlayerBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number):Bullet
+		public static function getNewPlayerBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number, color:uint):Bullet
 		{
-			return getNewBullet(x, y, velocity, sineSpeed, _playerBullets);
+			return getNewBullet(x, y, velocity, sineSpeed, color, _playerBullets);
 		}
 		
-		public static function getNewEnemyBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number):Bullet
+		public static function getNewEnemyBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number, color:uint):Bullet
 		{
-			return getNewBullet(x, y, velocity, sineSpeed, _enemyBullets);
+			return getNewBullet(x, y, velocity, sineSpeed, color, _enemyBullets);
 		}
 		
-		private static function getNewBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number, group:FlxGroup):Bullet
+		private static function getNewBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number, color:uint, group:FlxGroup):Bullet
 		{
 			var bullet:Bullet = group.getFirstAvailable(Bullet) as Bullet;
 			if (bullet == null)
 			{
-				bullet = new Bullet(x, y, velocity, sineSpeed);
+				bullet = new Bullet(x, y, velocity, sineSpeed, color);
 				group.add(bullet);
 			}
 			else
-				bullet.resetBullet(x, y, velocity, sineSpeed);
+				bullet.resetBullet(x, y, velocity, sineSpeed, color);
 			return bullet;
 		}
 		
@@ -54,16 +54,16 @@ package
 			return _isPlayerBullet;
 		}
 		
-		public function Bullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number)
+		public function Bullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number, color:uint)
 		{
 			super(x, y);
-			makeGraphic(10, 10);
-			resetBullet(x, y, velocity, sineSpeed);
+			resetBullet(x, y, velocity, sineSpeed, color);
 		}
 		
-		public function resetBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number):void
+		public function resetBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number, color:uint):void
 		{
 			super.reset(x, y);
+			makeGraphic(5, 5, color);
 			this.velocity.copyFrom(velocity);
 			maxVelocity.x = Math.abs(velocity.x);
 			maxVelocity.y = Math.abs(velocity.y);

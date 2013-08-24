@@ -16,9 +16,9 @@ package
 			obj2.kill();
 		}
 		
-		private const ACCELERATION:Number = 3000;
-		private const MAX_VELOCITY:Number = 600;
-		private const DRAG:Number = 3000;
+		private const ACCELERATION:Number = 1500;
+		private const MAX_VELOCITY:Number = 300;
+		private const DRAG:Number = 1500;
 		private const SHOOT_TIME:Number = 0.05;
 		private const HITBOX_SCALE_X:Number = 0.2;
 		private const HITBOX_SCALE_Y:Number = 0.2;
@@ -60,7 +60,7 @@ package
 		{
 			if (_shootTimer >= SHOOT_TIME)
 			{
-				Bullet.getNewPlayerBullet(x + (width / 2.0), y, new FlxPoint(0, -1000), 0);
+				Bullet.getNewPlayerBullet(x + (width / 2.0), y, new FlxPoint(0, -1000), 0, 0xFF349933);
 				_shootTimer = 0;
 			}
 		}
@@ -71,9 +71,9 @@ package
 			
 			var potentialX:Number = x + (velocity.x * FlxG.elapsed);
 			var potentialY:Number = y + (velocity.y * FlxG.elapsed);
-			var leftBorder:Number = -_originalWidth / 2;
+			var leftBorder:Number = (-_originalWidth / 2) + offset.x;
 			var rightBorder:Number = FlxG.width + leftBorder;
-			var topBorder:Number = -_originalHeight / 2;
+			var topBorder:Number = (-_originalHeight / 2) + offset.y;
 			var bottomBorder:Number = FlxG.height + topBorder;
 			if (potentialX < leftBorder)
 				velocity.x = (leftBorder - x) / FlxG.elapsed;

@@ -7,9 +7,11 @@ package enemies
 	 */
 	public class Turret extends Enemy 
 	{
+		[Embed(source = "../assets/images/turret.png")] private var sprite:Class
+		
 		private const HEALTH:int = 6;
 		private const SHOOT_TIME:Number = 1;
-		private const BULLET_SPEED:Number = 700;
+		private const BULLET_SPEED:Number = 350;
 		
 		private static var _turrets:FlxGroup = new FlxGroup;
 		
@@ -35,7 +37,7 @@ package enemies
 		
 		public function Turret(x:Number, y:Number) 
 		{
-			super(x, y, HEALTH, null, CONTINUE, 0);
+			super(x, y, HEALTH, null, CONTINUE, 0, sprite);
 			resetTurret(x, y, true);
 		}
 		
@@ -68,7 +70,7 @@ package enemies
 			var bulletVelocity:FlxPoint = Utils.getNormalizedVector(PlayState.player.x - bulletX, PlayState.player.y - bulletY);
 			bulletVelocity.x *= BULLET_SPEED;
 			bulletVelocity.y *= BULLET_SPEED;
-			Bullet.getNewEnemyBullet(bulletX, bulletY, bulletVelocity, 0);
+			Bullet.getNewEnemyBullet(bulletX, bulletY, bulletVelocity, 0, 0xFF9C33FF);
 		}
 	}
 

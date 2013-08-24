@@ -12,10 +12,10 @@ package
 		protected static const REVERSE:uint = 1;
 		protected static const STOP:uint = 2;
 		
-		private static const DOWNWARDS_SPEED:Number = 50;
+		private static const DOWNWARDS_SPEED:Number = 20;
 		private static const POINT_TOLERANCE:Number = 5;
 		private static const HEALTH_MULTIPLIER_FOR_SCORE:int = 10;
-		private static const SCREEN_BORDER:Number = 100;
+		private static const SCREEN_BORDER:Number = 10;
 		
 		public static function bulletCollision(obj1:FlxObject, obj2:FlxObject):void
 		{
@@ -40,10 +40,9 @@ package
 		private var _incNextPathPoint:Boolean;
 		private var _speed:Number;
 		
-		public function Enemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, onPathComplete:uint, speed:Number) 
+		public function Enemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, onPathComplete:uint, speed:Number, graphic:Class) 
 		{
-			super(x, y);
-			makeGraphic(40, 40);
+			super(x, y, graphic);
 			resetEnemy(x, y, health, path, onPathComplete, speed);
 		}
 		
