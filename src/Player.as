@@ -56,7 +56,7 @@ package
 			}
 		}
 		
-		override public function update():void 
+		public override function update():void 
 		{
 			shootTimer += FlxG.elapsed;
 			super.update();

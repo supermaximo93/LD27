@@ -8,7 +8,11 @@ package
 	 */
 	public class Enemy extends FlxSprite 
 	{
+		public static const DOWNWARDS_SPEED:Number = 100;
+		
 		private const POINT_TOLERANCE:Number = 5;
+		private const HEALTH_MULTIPLIER_FOR_SCORE:int = 10;
+		private const SCREEN_BORDER:Number = 100;
 		
 		public static function bulletCollision(obj1:FlxObject, obj2:FlxObject):void
 		{
@@ -25,6 +29,7 @@ package
 			bullet.kill();
 		}
 		
+		private var _maxHealth:int;
 		private var _health:int;
 		private var _path:Vector.<FlxPoint>;
 		private var _nextPathPoint:int;
@@ -34,15 +39,23 @@ package
 		{
 			super(x, y);
 			makeGraphic(40, 40);
+			resetEnemy(x, y, health, path, speed);
+		}
+		
+		public function resetEnemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, speed:Number):void
+		{
+			super.reset(x, y);
+			_maxHealth = health;
 			_health = health;
-			_path = path;
+			_path = mapPathToCurrentWorldPosition(path);
 			_nextPathPoint = -1;
 			_speed = speed;
 			getNextPathPoint();
 		}
 		
-		override public function update():void 
+		public override function update():void 
 		{
+			velocity.y -= DOWNWARDS_SPEED;
 			var nextPoint:FlxPoint = _path[_nextPathPoint];
 			var pointDistanceX:Number = nextPoint.x - x;
 			var pointDistanceY:Number = nextPoint.y - y;
@@ -64,6 +77,14 @@ package
 				y = nextPoint.y;
 				getNextPathPoint();
 			}
+			velocity.y += DOWNWARDS_SPEED;
+			movePathWithDownwardsSpeed();
+		}
+		
+		override public function kill():void 
+		{
+			FlxG.score += _maxHealth * HEALTH_MULTIPLIER_FOR_SCORE;
+			super.kill();
 		}
 		
 		private function takeDamage():void
@@ -80,8 +101,32 @@ package
 			var directionVector:FlxPoint = Utils.getNormalizedVector(_path[_nextPathPoint].x - x, _path[_nextPathPoint].y - y);
 			velocity.x = directionVector.x * _speed;
 			velocity.y = directionVector.y * _speed;
+			Bullet.getNewEnemyBullet(x, y, new FlxPoint(0, 800));
 		}
 
+		private function mapPathToCurrentWorldPosition(path:Vector.<FlxPoint>):Vector.<FlxPoint>
+		{
+			var length:int = path.length;
+			var newPath:Vector.<FlxPoint> = new Vector.<FlxPoint>(length, true);
+			for (var i:int = 0; i < length; ++i)
+				newPath[i] = new FlxPoint(path[i].x - x, path[i].y - y);
+			return newPath;
+		}
+		
+		private function movePathWithDownwardsSpeed():void
+		{
+			var distance:Number = DOWNWARDS_SPEED * FlxG.elapsed;
+			var offScreen:Boolean = true;
+			var length:int = _path.length;
+			for (var i:int = 0; i < length; ++i)
+			{
+				_path[i].y += distance;
+				if (_path[i].y < FlxG.height + SCREEN_BORDER)
+					offScreen = false;
+			}
+			if (offScreen)
+				kill();
+		}
 	}
 
 }
