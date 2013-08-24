@@ -35,6 +35,18 @@ package
 			}
 			return path;
 		}
+		
+		public static function lerp(min:Number, max:Number, x:Number):Number
+		{
+			return min + ((max - min) * x);
+		}
+		
+		public static function createExplosion(x:Number, y:Number, colors:Array):void
+		{
+			const PARTICLE_COUNT:int = 20;
+			for (var i:int = 0; i < PARTICLE_COUNT; ++i)
+				ExplosionParticle.getNewExplosionParticle(x, y, colors[int(Math.floor(Math.random() * colors.length))]);
+		}
 	}
 
 }

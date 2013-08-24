@@ -42,6 +42,7 @@ package
 			add(_enemies);
 			_player = new Player(100, 100);
 			add(_player);
+			add(ExplosionParticle.explosionParticles);
 			_levelCounter = 0;
 			levelUp();
 			_timer = 0;
@@ -59,6 +60,13 @@ package
 		override public function destroy():void 
 		{
 			_instance = null;
+			BackgroundParticle.backgrounParticles.clear();
+			Bullet.playerBullets.clear();
+			Bullet.enemyBullets.clear();
+			Turret.turrets.clear();
+			Fighter.fighters.clear();
+			Gunner.gunners.clear();
+			ExplosionParticle.explosionParticles.clear();
 			super.destroy();
 		}
 		

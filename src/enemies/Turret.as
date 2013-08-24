@@ -9,9 +9,10 @@ package enemies
 	{
 		[Embed(source = "../assets/images/turret.png")] private var sprite:Class
 		
-		private const HEALTH:int = 6;
-		private const SHOOT_TIME:Number = 1;
-		private const BULLET_SPEED:Number = 350;
+		private static const HEALTH:int = 6;
+		private static const SHOOT_TIME:Number = 1;
+		private static const BULLET_SPEED:Number = 350;
+		private static const EXPLOSION_COLORS:Array = [0xFF9C33FF, 0xFFC300FF, 0xFF6819B3, 0xFFC78CD9];
 		
 		private static var _turrets:FlxGroup = new FlxGroup;
 		
@@ -35,6 +36,11 @@ package enemies
 		
 		private var shootTimer:Number;
 		
+		protected override function get explosionColors():Array
+		{
+			return EXPLOSION_COLORS;
+		}
+		
 		public function Turret(x:Number, y:Number) 
 		{
 			super(x, y, HEALTH, null, CONTINUE, 0, sprite);
@@ -48,7 +54,7 @@ package enemies
 			shootTimer = 0;
 		}
 		
-		override public function update():void 
+		public override function update():void 
 		{
 			shootTimer += FlxG.elapsed;
 			if (shootTimer >= SHOOT_TIME)

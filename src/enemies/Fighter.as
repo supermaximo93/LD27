@@ -14,6 +14,7 @@ package enemies
 		private static const SPEED:Number = 200;
 		private static const SHOOT_TIME:Number = 0.7;
 		private static const BULLET_SPEED:Number = 400;
+		private static const EXPLOSION_COLORS:Array = [0xFF343399, 0xFF007DFF, 0xFF0300FF, 0xFF383762];
 		
 		private static function initialize():void
 		{
@@ -47,6 +48,11 @@ package enemies
 		
 		private var _shootTimer:Number;
 		
+		protected override function get explosionColors():Array
+		{
+			return EXPLOSION_COLORS;
+		}
+		
 		public function Fighter(x:Number, y:Number) 
 		{
 			super(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], REVERSE, SPEED, sprite);
@@ -60,7 +66,7 @@ package enemies
 			_shootTimer = 0;
 		}
 		
-		override public function update():void 
+		public override function update():void 
 		{
 			_shootTimer += FlxG.elapsed;
 			if (_shootTimer >= SHOOT_TIME)

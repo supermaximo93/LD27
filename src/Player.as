@@ -12,16 +12,26 @@ package
 		
 		public static function bulletCollision(obj1:FlxObject, obj2:FlxObject):void
 		{
-			obj1.kill()
-			obj2.kill();
+			var bullet:FlxObject;
+			var player:Player = obj1 as Player;
+			if (obj1 == null)
+			{
+				player = obj2 as Player;
+				bullet = obj1;
+			}
+			else
+				bullet = obj2;
+			player.enemyKill();
+			bullet.kill();
 		}
 		
-		private const ACCELERATION:Number = 1500;
-		private const MAX_VELOCITY:Number = 300;
-		private const DRAG:Number = 1500;
-		private const SHOOT_TIME:Number = 0.05;
-		private const HITBOX_SCALE_X:Number = 0.2;
-		private const HITBOX_SCALE_Y:Number = 0.2;
+		private static const ACCELERATION:Number = 1500;
+		private static const MAX_VELOCITY:Number = 300;
+		private static const DRAG:Number = 1500;
+		private static const SHOOT_TIME:Number = 0.05;
+		private static const HITBOX_SCALE_X:Number = 0.2;
+		private static const HITBOX_SCALE_Y:Number = 0.2;
+		private static const EXPLOSION_COLORS:Array = [0xFF349933, 0xFF386237, 0xFF00FF01, 0xFF7EDF20];
 		
 		private var _previousAcceleration:FlxPoint;
 		private var _shootTimer:Number;
@@ -85,6 +95,12 @@ package
 				velocity.y = (bottomBorder - y) / FlxG.elapsed;
 			
 			super.update();
+		}
+		
+		public function enemyKill():void
+		{
+			Utils.createExplosion(x + (width / 2) + offset.x, y + (height / 2) + offset.y, EXPLOSION_COLORS);
+			kill();
 		}
 	}
 

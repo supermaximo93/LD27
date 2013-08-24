@@ -15,6 +15,7 @@ package enemies
 		private static const STOP_TIME:Number = 2.5;
 		private static const BULLET_VELOCITY:FlxPoint = new FlxPoint(50, 200);
 		private static const BULLET_COLOR:uint = 0xFF732626;
+		private static const EXPLOSION_COLORS:Array = [0xFF732626, 0xFFDF1F20, 0xFF3B2B2B, 0xFFDF207C];
 		
 		private static var _gunners:FlxGroup = new FlxGroup;
 		
@@ -70,6 +71,11 @@ package enemies
 			velocity.y = 0;
 			_path = null;
 			_stopTimer = STOP_TIME;
+		}
+		
+		protected override function get explosionColors():Array
+		{
+			return EXPLOSION_COLORS;
 		}
 		
 		private function updateStopTimer():void
