@@ -8,7 +8,7 @@ package
 	 */
 	public class Enemy extends FlxSprite 
 	{
-		public static const DOWNWARDS_SPEED:Number = 100;
+		public static const DOWNWARDS_SPEED:Number = 50;
 		
 		private const POINT_TOLERANCE:Number = 5;
 		private const HEALTH_MULTIPLIER_FOR_SCORE:int = 10;

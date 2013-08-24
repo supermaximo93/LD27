@@ -52,7 +52,7 @@ package enemies
 			if (shootTimer >= SHOOT_TIME)
 			{
 				shootTimer = 0;
-				Bullet.getNewEnemyBullet(x + (width / 2), y + height, new FlxPoint(0, BULLET_SPEED));
+				Bullet.getNewEnemyBullet(x + (width / 2), y + height, new FlxPoint(0, BULLET_SPEED), 0);
 			}
 			
 			super.update();

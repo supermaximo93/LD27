@@ -73,7 +73,6 @@ package
 		{
 			FlxG.overlap(_player, Bullet.enemyBullets, Player.bulletCollision);
 			FlxG.overlap(_enemies, Bullet.playerBullets, Enemy.bulletCollision);
-			FlxG.overlap(_player, _enemies, Player.enemyCollision);
 		}
 		
 		private function handleScore():void

@@ -16,27 +16,12 @@ package
 			obj2.kill();
 		}
 		
-		public static function enemyCollision(obj1:FlxObject, obj2:FlxObject):void
-		{
-			var enemy:Enemy;
-			var player:Player = obj1 as Player;
-			if (player == null)
-			{
-				player = obj2 as Player;
-				enemy = obj1 as Enemy;
-			}
-			else
-				enemy = obj2 as Enemy;
-			player.kill();
-			enemy.takeDamage();
-		}
-		
 		private const ACCELERATION:Number = 3000;
 		private const MAX_VELOCITY:Number = 600;
 		private const DRAG:Number = 3000;
 		private const SHOOT_TIME:Number = 0.05;
-		private const HITBOX_SCALE_X:Number = 0.3;
-		private const HITBOX_SCALE_Y:Number = 0.8;
+		private const HITBOX_SCALE_X:Number = 0.2;
+		private const HITBOX_SCALE_Y:Number = 0.2;
 		
 		private var _previousAcceleration:FlxPoint;
 		private var _shootTimer:Number;
@@ -75,7 +60,7 @@ package
 		{
 			if (_shootTimer >= SHOOT_TIME)
 			{
-				Bullet.getNewPlayerBullet(x + (width / 2.0), y, new FlxPoint(0, -1000));
+				Bullet.getNewPlayerBullet(x + (width / 2.0), y, new FlxPoint(0, -1000), 0);
 				_shootTimer = 0;
 			}
 		}
