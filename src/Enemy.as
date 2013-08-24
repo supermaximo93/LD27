@@ -31,23 +31,27 @@ package
 		
 		private var _maxHealth:int;
 		private var _path:Vector.<FlxPoint>;
+		private var _reversePathOnComplete:Boolean;
 		private var _nextPathPoint:int;
+		private var _incNextPathPoint:Boolean;
 		private var _speed:Number;
 		
-		public function Enemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, speed:Number) 
+		public function Enemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, reversePathOnComplete:Boolean, speed:Number) 
 		{
 			super(x, y);
 			makeGraphic(40, 40);
-			resetEnemy(x, y, health, path, speed);
+			resetEnemy(x, y, health, path, reversePathOnComplete, speed);
 		}
 		
-		public function resetEnemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, speed:Number):void
+		public function resetEnemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, reversePathOnComplete:Boolean, speed:Number):void
 		{
 			super.reset(x, y);
 			_maxHealth = health;
 			this.health = health;
 			_speed = speed;
+			_reversePathOnComplete = reversePathOnComplete;
 			_nextPathPoint = -1;
+			_incNextPathPoint = true;
 			if (path == null)
 			{
 				_path = null;
@@ -109,8 +113,31 @@ package
 		
 		private function getNextPathPoint():void
 		{
-			if (++_nextPathPoint >= _path.length)
-				_nextPathPoint = 0;
+			if (_incNextPathPoint)
+				++_nextPathPoint;
+			else
+				--_nextPathPoint;
+			
+			if (_nextPathPoint >= _path.length)
+			{
+				if (_reversePathOnComplete)
+				{
+					_incNextPathPoint = !_incNextPathPoint;
+					_nextPathPoint = _path.length - 1;
+				}
+				else
+					_nextPathPoint = 0;
+			}
+			else if (_nextPathPoint < 0)
+			{
+				if (_reversePathOnComplete)
+				{
+					_incNextPathPoint = !_incNextPathPoint;
+					_nextPathPoint = 0;
+				}
+				else
+					_nextPathPoint = _path.length - 1;
+			}
 			
 			var directionVector:FlxPoint = Utils.getNormalizedVector(_path[_nextPathPoint].x - x, _path[_nextPathPoint].y - y);
 			velocity.x = directionVector.x * _speed;

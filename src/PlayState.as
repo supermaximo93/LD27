@@ -11,6 +11,13 @@ package
 	{
 		private const POINTS_PER_LEVEL:int = 1000;
 		
+		private static var _instance:PlayState;
+		
+		public static function get player():Player
+		{
+			return _instance == null ? null : _instance._player;
+		}
+		
 		private var _player:Player;
 		private var _enemies:FlxGroup;
 		private var _levelCounter:int;
@@ -21,6 +28,7 @@ package
 		
 		public override function create():void
 		{
+			_instance = this;
 			FlxG.bgColor = 0xff8cc5d9;
 			add(Bullet.playerBullets);
 			add(Bullet.enemyBullets);
@@ -40,6 +48,12 @@ package
 			
 			Turret.getNewTurret(10, 10);
 			Fighter.getNewFighter(30, 30);
+		}
+		
+		override public function destroy():void 
+		{
+			_instance = null;
+			super.destroy();
 		}
 		
 		public override function update():void

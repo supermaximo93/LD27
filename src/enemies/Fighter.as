@@ -9,7 +9,7 @@ package enemies
 	{
 		private static const PATHS:Vector.<Vector.<FlxPoint>> = new Vector.<Vector.<FlxPoint>>;
 		private const HEALTH:int = 3;
-		private const SPEED:Number = 200;
+		private const SPEED:Number = 400;
 		private const SHOOT_TIME:Number = 0.7;
 		private const BULLET_SPEED:Number = 800;
 		
@@ -56,7 +56,7 @@ package enemies
 		
 		public function Fighter(x:Number, y:Number) 
 		{
-			super(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], SPEED);
+			super(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], true, SPEED);
 			makeGraphic(30, 30, 0xffffffff);
 			resetFighter(x, y, true);
 		}
@@ -64,7 +64,7 @@ package enemies
 		public function resetFighter(x:Number, y:Number, calledFromConstructor:Boolean = false):void
 		{
 			if (!calledFromConstructor)
-				resetEnemy(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], SPEED);
+				resetEnemy(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], true, SPEED);
 			_shootTimer = 0;
 		}
 		
@@ -80,8 +80,8 @@ package enemies
 		}
 		
 		private static const PATH_STRINGS:Array = [
-			"10,10; 600,10",
-			"10,10; 100,100; 200,10; 300,100; 400,10"
+			"0,0; 600,0",
+			"0,0; 27,-45; 72,-72; 117,-45; 144,0; 171,45; 216,72; 261,45; 288,0; 315,-45; 360,-72; 405,-45; 432,0; 459,45; 504,72; 549,45; 576,0"
 		];
 	}
 

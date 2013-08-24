@@ -35,14 +35,14 @@ package enemies
 		
 		public function Turret(x:Number, y:Number) 
 		{
-			super(x, y, HEALTH, null, 0);
+			super(x, y, HEALTH, null, false, 0);
 			resetTurret(x, y, true);
 		}
 		
 		public function resetTurret(x:Number, y:Number, calledFromConstructor:Boolean = false):void
 		{
 			if (!calledFromConstructor)
-				resetEnemy(x, y, HEALTH, null, 0);
+				resetEnemy(x, y, HEALTH, null, false, 0);
 			shootTimer = 0;
 		}
 		
@@ -52,10 +52,23 @@ package enemies
 			if (shootTimer >= SHOOT_TIME)
 			{
 				shootTimer = 0;
-				Bullet.getNewEnemyBullet(x + (width / 2), y + height, new FlxPoint(0, BULLET_SPEED), 0);
+				shoot();
 			}
 			
 			super.update();
+		}
+		
+		private function shoot():void
+		{
+			if (PlayState.player == null || !PlayState.player.alive)
+				return;
+			
+			var bulletX:Number = x + (width / 2);
+			var bulletY:Number = y + height;
+			var bulletVelocity:FlxPoint = Utils.getNormalizedVector(PlayState.player.x - bulletX, PlayState.player.y - bulletY);
+			bulletVelocity.x *= BULLET_SPEED;
+			bulletVelocity.y *= BULLET_SPEED;
+			Bullet.getNewEnemyBullet(bulletX, bulletY, bulletVelocity, 0);
 		}
 	}
 
