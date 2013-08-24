@@ -23,6 +23,18 @@ package
 			return new FlxPoint(x / length, y / length);
 		}
 		
+		public static function stringToPath(str:String):Vector.<FlxPoint>
+		{
+			var path:Vector.<FlxPoint> = new Vector.<FlxPoint>;
+			var pointStrings:Array = str.split("; ");
+			var length:int = pointStrings.length;
+			for (var i:int = 0; i < length; ++i)
+			{
+				var xy:Array = (pointStrings[i] as String).split(",");
+				path.push(new FlxPoint(parseFloat(xy[0]), parseFloat(xy[1])));
+			}
+			return path;
+		}
 	}
 
 }

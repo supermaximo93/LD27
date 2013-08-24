@@ -16,16 +16,7 @@ package enemies
 		private static function initialize():void
 		{
 			for (var i:int = 0; i < PATH_STRINGS.length; ++i)
-			{
-				var path:Vector.<FlxPoint> = new Vector.<FlxPoint>;
-				var pointStrings:Array = (PATH_STRINGS[i] as String).split("; ");
-				for (var pointStringIndex:int = 0; pointStringIndex < pointStrings.length; ++pointStringIndex)
-				{
-					var xy:Array = (pointStrings[pointStringIndex] as String).split(",");
-					path.push(new FlxPoint(parseFloat(xy[0]), parseFloat(xy[1])));
-				}
-				PATHS.push(path);
-			}
+				PATHS.push(Utils.stringToPath(PATH_STRINGS[i]));
 		}
 		
 		{
@@ -56,7 +47,7 @@ package enemies
 		
 		public function Fighter(x:Number, y:Number) 
 		{
-			super(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], true, SPEED);
+			super(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], REVERSE, SPEED);
 			makeGraphic(30, 30, 0xffffffff);
 			resetFighter(x, y, true);
 		}
@@ -64,7 +55,7 @@ package enemies
 		public function resetFighter(x:Number, y:Number, calledFromConstructor:Boolean = false):void
 		{
 			if (!calledFromConstructor)
-				resetEnemy(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], true, SPEED);
+				resetEnemy(x, y, HEALTH, PATHS[int(Math.floor(Math.random() * PATHS.length))], REVERSE, SPEED);
 			_shootTimer = 0;
 		}
 		

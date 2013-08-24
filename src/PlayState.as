@@ -35,6 +35,7 @@ package
 			_enemies = new FlxGroup;
 			_enemies.add(Turret.turrets);
 			_enemies.add(Fighter.fighters);
+			_enemies.add(Gunner.gunners);
 			add(_enemies);
 			_player = new Player(100, 100);
 			add(_player);
@@ -48,6 +49,7 @@ package
 			
 			Turret.getNewTurret(10, 10);
 			Fighter.getNewFighter(30, 30);
+			Gunner.getNewGunner(0, 0);
 		}
 		
 		override public function destroy():void 

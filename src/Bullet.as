@@ -64,7 +64,7 @@ package
 		public function resetBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number):void
 		{
 			super.reset(x, y);
-			this.velocity = velocity;
+			this.velocity.copyFrom(velocity);
 			maxVelocity.x = Math.abs(velocity.x);
 			maxVelocity.y = Math.abs(velocity.y);
 			_sineSpeed = sineSpeed;
@@ -72,7 +72,7 @@ package
 			if (_sineSpeed != 0)
 			{
 				_originalX = x;
-				velocity.x = 0;
+				this.velocity.x = 0;
 			}
 		}
 		

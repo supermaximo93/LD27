@@ -35,14 +35,14 @@ package enemies
 		
 		public function Turret(x:Number, y:Number) 
 		{
-			super(x, y, HEALTH, null, false, 0);
+			super(x, y, HEALTH, null, CONTINUE, 0);
 			resetTurret(x, y, true);
 		}
 		
 		public function resetTurret(x:Number, y:Number, calledFromConstructor:Boolean = false):void
 		{
 			if (!calledFromConstructor)
-				resetEnemy(x, y, HEALTH, null, false, 0);
+				resetEnemy(x, y, HEALTH, null, CONTINUE, 0);
 			shootTimer = 0;
 		}
 		

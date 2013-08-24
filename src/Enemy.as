@@ -8,11 +8,14 @@ package
 	 */
 	public class Enemy extends FlxSprite 
 	{
-		public static const DOWNWARDS_SPEED:Number = 50;
+		protected static const CONTINUE:uint = 0;
+		protected static const REVERSE:uint = 1;
+		protected static const STOP:uint = 2;
 		
-		private const POINT_TOLERANCE:Number = 5;
-		private const HEALTH_MULTIPLIER_FOR_SCORE:int = 10;
-		private const SCREEN_BORDER:Number = 100;
+		private static const DOWNWARDS_SPEED:Number = 50;
+		private static const POINT_TOLERANCE:Number = 5;
+		private static const HEALTH_MULTIPLIER_FOR_SCORE:int = 10;
+		private static const SCREEN_BORDER:Number = 100;
 		
 		public static function bulletCollision(obj1:FlxObject, obj2:FlxObject):void
 		{
@@ -29,27 +32,29 @@ package
 			bullet.kill();
 		}
 		
+		protected var _path:Vector.<FlxPoint>;
+		protected var _nextPathPoint:int;
+		protected var _moveDown:Boolean;
 		private var _maxHealth:int;
-		private var _path:Vector.<FlxPoint>;
-		private var _reversePathOnComplete:Boolean;
-		private var _nextPathPoint:int;
+		private var _onPathComplete:uint;
 		private var _incNextPathPoint:Boolean;
 		private var _speed:Number;
 		
-		public function Enemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, reversePathOnComplete:Boolean, speed:Number) 
+		public function Enemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, onPathComplete:uint, speed:Number) 
 		{
 			super(x, y);
 			makeGraphic(40, 40);
-			resetEnemy(x, y, health, path, reversePathOnComplete, speed);
+			resetEnemy(x, y, health, path, onPathComplete, speed);
 		}
 		
-		public function resetEnemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, reversePathOnComplete:Boolean, speed:Number):void
+		public function resetEnemy(x:Number, y:Number, health:int, path:Vector.<FlxPoint>, onPathComplete:uint, speed:Number):void
 		{
 			super.reset(x, y);
 			_maxHealth = health;
 			this.health = health;
 			_speed = speed;
-			_reversePathOnComplete = reversePathOnComplete;
+			_moveDown = true;
+			_onPathComplete = onPathComplete;
 			_nextPathPoint = -1;
 			_incNextPathPoint = true;
 			if (path == null)
@@ -71,9 +76,7 @@ package
 		}
 		
 		public override function update():void 
-		{			
-			velocity.y -= DOWNWARDS_SPEED;
-			
+		{
 			if (_path != null)
 			{
 				var nextPoint:FlxPoint = _path[_nextPathPoint];
@@ -96,13 +99,32 @@ package
 					x = nextPoint.x;
 					y = nextPoint.y;
 					getNextPathPoint();
+					onPathPointReached();
 				}
-				movePathWithDownwardsSpeed();
+				if (_moveDown)
+					movePathWithDownwardsSpeed();
 			}
 			else
+			{
 				super.update();
-			
-			velocity.y += DOWNWARDS_SPEED;
+				killIfOffScreen();
+			}
+		}
+		
+		override public function postUpdate():void 
+		{
+			if (_moveDown)
+			{
+				velocity.y += DOWNWARDS_SPEED;
+				super.postUpdate();
+				velocity.y -= DOWNWARDS_SPEED;
+			}
+			else
+				super.postUpdate();
+		}
+		
+		protected function onPathPointReached():void
+		{
 		}
 		
 		private function playerKill():void
@@ -112,7 +134,7 @@ package
 		}
 		
 		private function getNextPathPoint():void
-		{
+		{			
 			if (_incNextPathPoint)
 				++_nextPathPoint;
 			else
@@ -120,28 +142,40 @@ package
 			
 			if (_nextPathPoint >= _path.length)
 			{
-				if (_reversePathOnComplete)
+				if (_onPathComplete == REVERSE)
 				{
 					_incNextPathPoint = !_incNextPathPoint;
 					_nextPathPoint = _path.length - 1;
 				}
+				else if (_onPathComplete == STOP)
+					_path = null;
 				else
 					_nextPathPoint = 0;
 			}
 			else if (_nextPathPoint < 0)
 			{
-				if (_reversePathOnComplete)
+				if (_onPathComplete == REVERSE)
 				{
 					_incNextPathPoint = !_incNextPathPoint;
 					_nextPathPoint = 0;
 				}
+				else if (_onPathComplete == STOP)
+					_path = null;
 				else
 					_nextPathPoint = _path.length - 1;
 			}
 			
-			var directionVector:FlxPoint = Utils.getNormalizedVector(_path[_nextPathPoint].x - x, _path[_nextPathPoint].y - y);
-			velocity.x = directionVector.x * _speed;
-			velocity.y = directionVector.y * _speed;
+			if (_path == null)
+			{
+				velocity.x = 0;
+				velocity.y = 0;
+			}
+			else
+			{
+				var directionVector:FlxPoint = Utils.getNormalizedVector(_path[_nextPathPoint].x - x, _path[_nextPathPoint].y - y);
+				velocity.x = directionVector.x * _speed;
+				velocity.y = directionVector.y * _speed;
+			}
 		}
 
 		private function mapPathToCurrentWorldPosition(path:Vector.<FlxPoint>):Vector.<FlxPoint>
@@ -165,6 +199,12 @@ package
 					offScreen = false;
 			}
 			if (offScreen)
+				kill();
+		}
+		
+		private function killIfOffScreen():void
+		{
+			if (y > FlxG.height + SCREEN_BORDER)
 				kill();
 		}
 	}
