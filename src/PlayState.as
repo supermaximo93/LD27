@@ -17,12 +17,15 @@ package
 			add(Bullet.enemyBullets);
 			player = new Player(100, 100);
 			add(player);
+			var path:Vector.<FlxPoint> = new Vector.<FlxPoint>;
+			path.push(new FlxPoint(10, 10), new FlxPoint(50, 50), new FlxPoint(10, 140), new FlxPoint(300, 200), new FlxPoint(450, 300), new FlxPoint(600, 10));
+			add(new Enemy(10, 10, 10, path, 800));
 		}
 		
 		override public function update():void
 		{
 			handleInput();
-			FlxG.collide(player, Bullet.enemyBullets);
+			FlxG.collide(player, Bullet.enemyBullets, Player.bulletCollision);
 			super.update();
 		}
 		

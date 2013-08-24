@@ -8,6 +8,12 @@ package
 	 */
 	public class Player extends FlxSprite 
 	{
+		public static function bulletCollision(obj1:FlxObject, obj2:FlxObject):void
+		{
+			obj1.kill()
+			obj2.kill();
+		}
+		
 		private const ACCELERATION:Number = 3000;
 		private const MAX_VELOCITY:Number = 600;
 		private const DRAG:Number = 3000;
@@ -45,7 +51,7 @@ package
 		{
 			if (shootTimer >= SHOOT_TIME)
 			{
-				Bullet.getNewEnemyBullet(x, y, new FlxPoint(0, -1000));
+				Bullet.getNewPlayerBullet(x, y, new FlxPoint(0, -1000));
 				shootTimer = 0;
 			}
 		}

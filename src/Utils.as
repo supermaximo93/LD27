@@ -8,19 +8,19 @@ package
 	 */
 	public class Utils 
 	{
-		public static function normalize(vector:FlxPoint):FlxPoint
+		public static function getNormalizedVector(x:Number, y:Number):FlxPoint
 		{
-			if (vector.x == 0)
+			if (x == 0)
 			{
-				if (vector.y == 0)
+				if (y == 0)
 					return new FlxPoint();
-				return new FlxPoint(0, vector.y / Math.abs(vector.y));
+				return new FlxPoint(0, y / Math.abs(y));
 			}
-			else if (vector.y == 0)
-				return new FlxPoint(vector.x / Math.abs(vector.x), 0);
+			else if (y == 0)
+				return new FlxPoint(x / Math.abs(x), 0);
 				
-			var length:Number = Math.sqrt((vector.x * vector.x) + (vector.y * vector.y));
-			return new FlxPoint(vector.x / length, vector.y / length);
+			var length:Number = Math.sqrt((x * x) + (y * y));
+			return new FlxPoint(x / length, y / length);
 		}
 		
 	}
