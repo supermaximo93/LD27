@@ -30,7 +30,6 @@ package
 		}
 		
 		private var _maxHealth:int;
-		private var _health:int;
 		private var _path:Vector.<FlxPoint>;
 		private var _nextPathPoint:int;
 		private var _speed:Number;
@@ -46,51 +45,66 @@ package
 		{
 			super.reset(x, y);
 			_maxHealth = health;
-			_health = health;
-			_path = mapPathToCurrentWorldPosition(path);
+			this.health = health;
 			_nextPathPoint = -1;
+			if (path == null)
+			{
+				_path = null;
+				velocity.y = DOWNWARDS_SPEED;
+			}
+			else
+			{
+				_path = mapPathToCurrentWorldPosition(path);
+				getNextPathPoint();
+			}
 			_speed = speed;
-			getNextPathPoint();
+		}
+		
+		public function takeDamage():void
+		{
+			if (--health <= 0)
+				playerKill();
 		}
 		
 		public override function update():void 
-		{
+		{			
 			velocity.y -= DOWNWARDS_SPEED;
-			var nextPoint:FlxPoint = _path[_nextPathPoint];
-			var pointDistanceX:Number = nextPoint.x - x;
-			var pointDistanceY:Number = nextPoint.y - y;
-			var potentialX:Number = x + (velocity.x * FlxG.elapsed);
-			var potentialY:Number = y + (velocity.y * FlxG.elapsed);
-			var potentialPointDistanceX:Number = nextPoint.x - potentialX;
-			var potentialPointDistanceY:Number = nextPoint.y - potentialY;
 			
-			if ((pointDistanceX > 0 && potentialPointDistanceX < 0) || (pointDistanceX < 0 && potentialPointDistanceX > 0))
-				velocity.x = pointDistanceX / FlxG.elapsed;
-			if ((pointDistanceY > 0 && potentialPointDistanceY < 0) || (pointDistanceY < 0 && potentialPointDistanceY > 0))
-				velocity.y = pointDistanceY / FlxG.elapsed;
-			
-			super.update();
-			
-			if (Math.abs(nextPoint.x - x) < POINT_TOLERANCE && Math.abs(nextPoint.y - y) < POINT_TOLERANCE)
+			if (_path != null)
 			{
-				x = nextPoint.x;
-				y = nextPoint.y;
-				getNextPathPoint();
+				var nextPoint:FlxPoint = _path[_nextPathPoint];
+				var pointDistanceX:Number = nextPoint.x - x;
+				var pointDistanceY:Number = nextPoint.y - y;
+				var potentialX:Number = x + (velocity.x * FlxG.elapsed);
+				var potentialY:Number = y + (velocity.y * FlxG.elapsed);
+				var potentialPointDistanceX:Number = nextPoint.x - potentialX;
+				var potentialPointDistanceY:Number = nextPoint.y - potentialY;
+				
+				if ((pointDistanceX > 0 && potentialPointDistanceX < 0) || (pointDistanceX < 0 && potentialPointDistanceX > 0))
+					velocity.x = pointDistanceX / FlxG.elapsed;
+				if ((pointDistanceY > 0 && potentialPointDistanceY < 0) || (pointDistanceY < 0 && potentialPointDistanceY > 0))
+					velocity.y = pointDistanceY / FlxG.elapsed;
+				
+				super.update();
+				
+				if (Math.abs(nextPoint.x - x) < POINT_TOLERANCE && Math.abs(nextPoint.y - y) < POINT_TOLERANCE)
+				{
+					x = nextPoint.x;
+					y = nextPoint.y;
+					getNextPathPoint();
+				}
+				movePathWithDownwardsSpeed();
 			}
+			else
+				super.update();
+			
 			velocity.y += DOWNWARDS_SPEED;
-			movePathWithDownwardsSpeed();
 		}
 		
-		override public function kill():void 
+		private function playerKill():void
 		{
 			FlxG.score += _maxHealth * HEALTH_MULTIPLIER_FOR_SCORE;
-			super.kill();
-		}
-		
-		private function takeDamage():void
-		{
-			if (--health <= 0)
-				kill();
+			kill();
 		}
 		
 		private function getNextPathPoint():void
@@ -101,7 +115,6 @@ package
 			var directionVector:FlxPoint = Utils.getNormalizedVector(_path[_nextPathPoint].x - x, _path[_nextPathPoint].y - y);
 			velocity.x = directionVector.x * _speed;
 			velocity.y = directionVector.y * _speed;
-			Bullet.getNewEnemyBullet(x, y, new FlxPoint(0, 800));
 		}
 
 		private function mapPathToCurrentWorldPosition(path:Vector.<FlxPoint>):Vector.<FlxPoint>

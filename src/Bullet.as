@@ -7,7 +7,7 @@ package
 	 * @author Max Foster
 	 */
 	public class Bullet extends FlxSprite 
-	{
+	{		
 		private static var _playerBullets:FlxGroup = new FlxGroup;
 		private static var _enemyBullets:FlxGroup = new FlxGroup;
 		
