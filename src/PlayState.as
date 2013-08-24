@@ -1,6 +1,6 @@
 package  
 {
-	import enemies.Turret;
+	import enemies.*;
 	import org.flixel.*;
 	
 	/**
@@ -26,11 +26,10 @@ package
 			add(Bullet.enemyBullets);
 			_enemies = new FlxGroup;
 			_enemies.add(Turret.turrets);
+			_enemies.add(Fighter.fighters);
 			add(_enemies);
 			_player = new Player(100, 100);
 			add(_player);
-			var path:Vector.<FlxPoint> = new Vector.<FlxPoint>;
-			path.push(new FlxPoint(10, 10), new FlxPoint(50, 50), new FlxPoint(10, 140), new FlxPoint(300, 200), new FlxPoint(450, 300), new FlxPoint(600, 10));
 			_levelCounter = 0;
 			levelUp();
 			_timer = 0;
@@ -40,6 +39,7 @@ package
 			add(_scoreText);
 			
 			Turret.getNewTurret(10, 10);
+			Fighter.getNewFighter(30, 30);
 		}
 		
 		public override function update():void

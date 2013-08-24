@@ -46,6 +46,7 @@ package
 			super.reset(x, y);
 			_maxHealth = health;
 			this.health = health;
+			_speed = speed;
 			_nextPathPoint = -1;
 			if (path == null)
 			{
@@ -57,7 +58,6 @@ package
 				_path = mapPathToCurrentWorldPosition(path);
 				getNextPathPoint();
 			}
-			_speed = speed;
 		}
 		
 		public function takeDamage():void
@@ -122,7 +122,7 @@ package
 			var length:int = path.length;
 			var newPath:Vector.<FlxPoint> = new Vector.<FlxPoint>(length, true);
 			for (var i:int = 0; i < length; ++i)
-				newPath[i] = new FlxPoint(path[i].x - x, path[i].y - y);
+				newPath[i] = new FlxPoint(path[i].x + x, path[i].y + y);
 			return newPath;
 		}
 		

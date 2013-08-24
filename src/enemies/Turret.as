@@ -41,7 +41,7 @@ package enemies
 		
 		public function resetTurret(x:Number, y:Number, calledFromConstructor:Boolean = false):void
 		{
-			if (calledFromConstructor)
+			if (!calledFromConstructor)
 				resetEnemy(x, y, HEALTH, null, 0);
 			shootTimer = 0;
 		}
@@ -52,7 +52,7 @@ package enemies
 			if (shootTimer >= SHOOT_TIME)
 			{
 				shootTimer = 0;
-				Bullet.getNewEnemyBullet(x + (width / 2), y + (height / 2), new FlxPoint(0, BULLET_SPEED));
+				Bullet.getNewEnemyBullet(x + (width / 2), y + height, new FlxPoint(0, BULLET_SPEED));
 			}
 			
 			super.update();
