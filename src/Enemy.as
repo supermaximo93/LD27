@@ -133,7 +133,7 @@ package
 		
 		private function playerKill():void
 		{
-			FlxG.score += _maxHealth * HEALTH_MULTIPLIER_FOR_SCORE;
+			PlayState.addToScore(_maxHealth * HEALTH_MULTIPLIER_FOR_SCORE);
 			Utils.createExplosion(x + (width / 2), y + (height / 2), explosionColors);
 			kill();
 		}

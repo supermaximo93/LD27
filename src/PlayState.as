@@ -12,8 +12,8 @@ package
 		private static const POINTS_PER_LEVEL:int = 1000;
 		private static const BACKGROUND_PARTICLE_TIME:Number = 0.001;
 		private static const PLAYER_RESPAWN_TIME:Number = 0.5;
-		private static const PLAYER_START_X:Number = 100;
-		private static const PLAYER_START_Y:Number = 100;
+		private static const PLAYER_START_X:Number = 160;
+		private static const PLAYER_START_Y:Number = 200;
 		
 		private static var _instance:PlayState;
 		
@@ -25,18 +25,29 @@ package
 		public static function startPlayerRespawnTimer():void
 		{
 			_instance._playerRespawnTimer.start(PLAYER_RESPAWN_TIME, 1, _instance.respawnPlayer);
+			_instance.breakCombo();
+		}
+		
+		public static function addToScore(points:int):void
+		{
+			FlxG.score += points;
+			_instance._scoreSinceComboBroken += points;
+			++_instance._combo;
 		}
 		
 		private var _player:Player;
 		private var _enemies:FlxGroup;
 		private var _levelCounter:int;
 		private var _pointTarget:int;
-		private var _timer:Number;
-		private var _timerText:FlxText;
 		private var _scoreText:FlxText;
+		private var _goalText:FlxText;
+		private var _timerText:FlxText;
+		private var _timer:Number;
 		private var _backgroundParticleTimer:Number;
 		private var _enemySpawner:EnemySpawner;
 		private var _playerRespawnTimer:FlxTimer;
+		private var _combo:int;
+		private var _scoreSinceComboBroken:int;
 		
 		public override function create():void
 		{
@@ -53,17 +64,24 @@ package
 			_player = new Player(PLAYER_START_X, PLAYER_START_Y);
 			add(_player);
 			add(ExplosionParticle.explosionParticles);
-			_levelCounter = 0;
-			levelUp();
+			_scoreText = new FlxText(2, 2, 200);
+			_scoreText.color = 0xff000000;
+			_goalText = new FlxText(2, 12, 200);
+			_goalText.color = 0xff000000;
+			_timerText = new FlxText(2, 22, 200);
+			_timerText.color = 0xff000000;
 			_timer = 0;
-			_timerText = new FlxText(10, FlxG.height - 50, 100);
-			_scoreText = new FlxText(10, 10, 100);
-			add(_timerText);
+			add(_goalText);
 			add(_scoreText);
+			add(_timerText);
 			_backgroundParticleTimer = 0;
 			_enemySpawner = new EnemySpawner();
 			_enemySpawner.start();
 			_playerRespawnTimer = new FlxTimer();
+			_levelCounter = 0;
+			levelUp();
+			_combo = 0;
+			_scoreSinceComboBroken = 0;
 		}
 		
 		public override function destroy():void 
@@ -123,18 +141,26 @@ package
 			if (_timer >= 10)
 			{
 				_timer = 0;
+				breakCombo();
 				if (FlxG.score >= _pointTarget)
 					levelUp();
 				else
 					;// end the game
 			}
-			_timerText.text = (10 - Math.floor(_timer)).toString();
-			_scoreText.text = FlxG.score.toString();
+			_timerText.text = "TIME: " + (10 - Math.floor(_timer)).toString();
+			_scoreText.text = "SCORE: " + FlxG.score.toString();
+			if (_combo > 1)
+			{
+				_scoreText.text += " + " + _scoreSinceComboBroken.toString();
+				if (_combo > 2)
+					_scoreText.text += " x " + (_combo - 1).toString();
+			}
 		}
 		
 		private function levelUp():void
 		{
 			_pointTarget = FlxG.score + (POINTS_PER_LEVEL * ++_levelCounter);
+			_goalText.text = "GOAL: " + _pointTarget.toString();
 		}
 		
 		private function updateBackgroundParticles():void
@@ -150,6 +176,14 @@ package
 		private function respawnPlayer(timer:FlxTimer):void
 		{
 			_player.reset(PLAYER_START_X, PLAYER_START_Y);
+		}
+		
+		private function breakCombo():void
+		{	
+			if (_combo > 0)
+				FlxG.score += _scoreSinceComboBroken * (_combo - 1);
+			_scoreSinceComboBroken = 0;
+			_combo = 0;
 		}
 	}
 

@@ -14,8 +14,8 @@ package
 		private static const MAX_VELOCITY:Number = 300;
 		private static const DRAG:Number = 1500;
 		private static const SHOOT_TIME:Number = 0.05;
-		private static const HITBOX_SCALE_X:Number = 0.2;
-		private static const HITBOX_SCALE_Y:Number = 0.2;
+		private static const HITBOX_SCALE_X:Number = 0.1;
+		private static const HITBOX_SCALE_Y:Number = 0.1;
 		private static const EXPLOSION_COLORS:Array = [0xFF349933, 0xFF386237, 0xFF00FF01, 0xFF7EDF20];
 		private static const INVINCIBILITY_TIME:Number = 1.5;
 		
