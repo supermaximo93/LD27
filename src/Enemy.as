@@ -68,7 +68,7 @@ package
 			}
 			else
 			{
-				_path = mapPathToCurrentWorldPosition(path);
+				_path = copyPath(path);
 				getNextPathPoint();
 			}
 		}
@@ -182,13 +182,15 @@ package
 				velocity.y = directionVector.y * _speed;
 			}
 		}
-
-		private function mapPathToCurrentWorldPosition(path:Vector.<FlxPoint>):Vector.<FlxPoint>
+		
+		private function copyPath(path:Vector.<FlxPoint>):Vector.<FlxPoint>
 		{
 			var length:int = path.length;
 			var newPath:Vector.<FlxPoint> = new Vector.<FlxPoint>(length, true);
+			var halfWidth:Number = width / 2;
+			var halfHeight:Number = height / 2;
 			for (var i:int = 0; i < length; ++i)
-				newPath[i] = new FlxPoint(path[i].x + x, path[i].y + y);
+				newPath[i] = new FlxPoint(path[i].x - halfWidth, path[i].y - halfHeight);
 			return newPath;
 		}
 		

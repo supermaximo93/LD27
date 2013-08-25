@@ -27,6 +27,7 @@ package
 		private var _timerText:FlxText;
 		private var _scoreText:FlxText;
 		private var _backgroundParticleTimer:Number;
+		private var _enemySpawner:EnemySpawner;
 		
 		public override function create():void
 		{
@@ -51,10 +52,8 @@ package
 			add(_timerText);
 			add(_scoreText);
 			_backgroundParticleTimer = 0;
-			
-			Turret.getNewTurret(10, 10);
-			Fighter.getNewFighter(30, 30);
-			Gunner.getNewGunner(0, 0);
+			_enemySpawner = new EnemySpawner();
+			_enemySpawner.start();
 		}
 		
 		override public function destroy():void 
@@ -76,6 +75,7 @@ package
 			handleCollisions();
 			updateScore();
 			updateBackgroundParticles();
+			_enemySpawner.update();
 			super.update();
 		}
 		

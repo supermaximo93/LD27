@@ -9,7 +9,8 @@ package enemies
 	{
 		[Embed(source = "../assets/images/gunner.png")] private var sprite:Class
 		
-		private static const PATH:Vector.<FlxPoint> = Utils.stringToPath("60,25; 260,25; 115,25; 115,240");
+		private static const LEFT_START_PATH:Vector.<FlxPoint> = Utils.stringToPath("60,25; 260,25; 160,25; 160,270");
+		private static const RIGHT_START_PATH:Vector.<FlxPoint> = Utils.stringToPath("260,25; 60,25; 160,25; 160,270");
 		private static const HEALTH:int = 10;
 		private static const SPEED:Number = 100;
 		private static const STOP_TIME:Number = 2.5;
@@ -43,7 +44,7 @@ package enemies
 		
 		public function Gunner(x:Number, y:Number) 
 		{
-			super(x, y, HEALTH, PATH, STOP, SPEED, sprite);
+			super(x, y, HEALTH, getStartPath(x), STOP, SPEED, sprite);
 			resetGunner(x, y, true);
 			_tempVelocity = new FlxPoint;
 		}
@@ -51,7 +52,7 @@ package enemies
 		public function resetGunner(x:Number, y:Number, calledFromConstructor:Boolean = false):void
 		{
 			if (!calledFromConstructor)
-				super.resetEnemy(x, y, HEALTH, PATH, STOP, SPEED);
+				super.resetEnemy(x, y, HEALTH, getStartPath(x), STOP, SPEED);
 			_tempPath = null;
 			_stopTimer = 0;
 			_moveDown = false;
@@ -104,6 +105,11 @@ package enemies
 			var bulletY:Number = y + height - 4;
 			Bullet.getNewEnemyBullet(bulletX, bulletY, BULLET_VELOCITY, 10, BULLET_COLOR);
 			Bullet.getNewEnemyBullet(bulletX, bulletY, BULLET_VELOCITY, -10, BULLET_COLOR);
+		}
+		
+		private function getStartPath(x:Number):Vector.<FlxPoint>
+		{
+			return x < FlxG.width / 2 ? LEFT_START_PATH : RIGHT_START_PATH
 		}
 	}
 
