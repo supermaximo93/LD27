@@ -9,8 +9,11 @@ package
 	 */
 	public class PlayState extends FlxState 
 	{
+		[Embed(source = "assets/music/game.mp3")] private static var music:Class
 		[Embed(source = "assets/sounds/levelup.mp3")] private static var levelUpSound:Class
 		
+		public static const MUSIC_VOLUME:Number = 1;
+		public static const SOUND_VOLUME:Number = 0.4;
 		private static const POINTS_PER_LEVEL:int = 1000;
 		private static const BACKGROUND_PARTICLE_TIME:Number = 0.001;
 		private static const PLAYER_RESPAWN_TIME:Number = 0.5;
@@ -84,6 +87,7 @@ package
 			levelUp();
 			_combo = 0;
 			_scoreSinceComboBroken = 0;
+			FlxG.playMusic(music, MUSIC_VOLUME);
 		}
 		
 		public override function destroy():void 
@@ -97,6 +101,7 @@ package
 			Gunner.gunners.clear();
 			ExplosionParticle.explosionParticles.clear();
 			super.destroy();
+			FlxG.music.stop();
 		}
 		
 		public override function update():void
@@ -163,7 +168,7 @@ package
 		{
 			_pointTarget = FlxG.score + (POINTS_PER_LEVEL * ++_levelCounter);
 			_goalText.text = "GOAL: " + _pointTarget.toString();
-			FlxG.play(levelUpSound);
+			FlxG.play(levelUpSound, SOUND_VOLUME);
 		}
 		
 		private function updateBackgroundParticles():void

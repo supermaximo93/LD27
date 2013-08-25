@@ -89,7 +89,7 @@ package
 			if (_shootTimer >= SHOOT_TIME)
 			{
 				Bullet.getNewPlayerBullet(x + (width / 2.0) - (Bullet.BULLET_SIZE / 2), y, new FlxPoint(0, -1000), 0, 0xFF349933);
-				FlxG.play(shootSound);
+				FlxG.play(shootSound, PlayState.SOUND_VOLUME);
 				_shootTimer = 0;
 			}
 		}
@@ -138,7 +138,7 @@ package
 				if (_invincibilityTimer <= 0)
 				{
 					visible = true;
-					FlxG.play(uninvincibleSound, 1.4);
+					FlxG.play(uninvincibleSound, PlayState.SOUND_VOLUME * 1.4);
 				}
 				else
 					visible = Math.floor(_invincibilityTimer * 100) % 2 == 0;
