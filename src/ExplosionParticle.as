@@ -15,8 +15,8 @@ package
 		private static const LIFETIME:Number = 0.7;
 		private static const DRAG:Number = 2000;
 		private static const DRAG_TIME:Number = 0.2;
-		private static const CONSTANT_Y_SPEED:Number = -400;
-		private static const ACCELERATION_Y:Number = -2000;
+		private static const CONSTANT_Y_SPEED:Number = 400;
+		private static const ACCELERATION_Y:Number = 2000;
 		
 		private static var _explosionParticles:FlxGroup = new FlxGroup;
 		
@@ -72,7 +72,7 @@ package
 			if (_dragTimer <= 0)
 			{
 				drag.y = 0;
-				if (velocity.y > 0)
+				if (velocity.y < 0)
 					velocity.y = 0;
 			}
 		}
