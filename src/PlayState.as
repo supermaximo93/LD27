@@ -93,14 +93,18 @@ package
 			_combo = 0;
 			_scoreSinceComboBroken = 0;
 			_gameOver = false;
-			FlxG.playMusic(music, MUSIC_VOLUME);
+			
+			if (FlxG.music.ID != Main.GAME_MUSIC_ID)
+			{
+				FlxG.playMusic(music, MUSIC_VOLUME);
+				FlxG.music.ID = Main.GAME_MUSIC_ID;
+			}
 		}
 		
 		public override function destroy():void 
 		{
 			_instance = null;
 			super.destroy();
-			FlxG.music.stop();
 		}
 		
 		public override function update():void

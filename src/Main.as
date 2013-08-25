@@ -10,6 +10,8 @@ package
 	[Frame(factoryClass="Preloader")]
 	public class Main extends FlxGame 
 	{
+		public static const MENU_MUSIC_ID:int = 0;
+		public static const GAME_MUSIC_ID:int = 1;
 		
 		public function Main():void 
 		{

@@ -37,6 +37,8 @@ package
 		{
 			if (FlxG.keys.SPACE)
 				FlxG.switchState(new MenuState);
+			if (FlxG.keys.R)
+				FlxG.switchState(new PlayState);
 		}
 	}
 
