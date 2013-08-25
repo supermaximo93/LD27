@@ -76,13 +76,6 @@ package
 					velocity.y = 0;
 			}
 		}
-		
-		/*public override function postUpdate():void
-		{
-			velocity.y += CONSTANT_Y_SPEED;
-			super.postUpdate();
-			velocity.y -= CONSTANT_Y_SPEED;
-		}*/
 	}
 
 }
