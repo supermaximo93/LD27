@@ -155,7 +155,11 @@ package
 				if (FlxG.score >= _pointTarget)
 					levelUp();
 				else
-					;// end the game
+				{
+					if (player.alive)
+						_player.loseGameKill();
+					_playerRespawnTimer.stop();
+				}
 			}
 			_timerText.text = "TIME: " + (10 - Math.floor(_timer)).toString();
 			_scoreText.text = "SCORE: " + FlxG.score.toString();

@@ -11,6 +11,7 @@ package
 		[Embed(source = "assets/sounds/respawn.mp3")] public static var respawnSound:Class
 		[Embed(source = "assets/sounds/shoot.mp3")] private static var shootSound:Class
 		[Embed(source = "assets/sounds/uninvincible.mp3")] private static var uninvincibleSound:Class
+		[Embed(source = "assets/sounds/powerup.mp3")] private static var powerupSound:Class
 		[Embed(source = "assets/images/player.png")] private static var sprite:Class
 		
 		private static const ACCELERATION:Number = 1500;
@@ -172,10 +173,21 @@ package
 			}
 		}
 		
+		public function loseGameKill():void
+		{
+			var centerX:Number = x + (width / 2) + offset.x;
+			var centerY:Number = y + (height / 2) + offset.y;
+			Utils.createExplosion(centerX - 10, centerY, EXPLOSION_COLORS);
+			Utils.createExplosion(centerX + 10, centerY, EXPLOSION_COLORS);
+			Utils.createExplosion(centerX, centerY + 10, EXPLOSION_COLORS);
+			Utils.createExplosion(centerX, centerY - 10, EXPLOSION_COLORS);
+		}
+		
 		public function applyPowerup(powerup:Powerup):void
 		{
 			_currentPowerup = powerup.powerupType;
 			_powerupTimer = POWERUP_TIME;
+			FlxG.play(powerupSound, PlayState.SOUND_VOLUME * 1.8);
 		}
 		
 		private function updateVelocity():void
@@ -204,7 +216,7 @@ package
 				if (_invincibilityTimer <= 0)
 				{
 					visible = true;
-					FlxG.play(uninvincibleSound, PlayState.SOUND_VOLUME * 1.4);
+					FlxG.play(uninvincibleSound, 1.0);
 				}
 				else
 					visible = Math.floor(_invincibilityTimer * 100) % 2 == 0;
