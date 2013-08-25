@@ -88,7 +88,7 @@ package
 			_enemySpawner.start();
 			_playerRespawnTimer = new FlxTimer();
 			_levelCounter = 0;
-			levelUp();
+			levelUp(true);
 			_score = 0;
 			_combo = 0;
 			_scoreSinceComboBroken = 0;
@@ -174,7 +174,7 @@ package
 					_gameOverTimer = GAME_OVER_DELAY;
 				}
 			}
-			_timerText.text = "TIME: " + (10 - Math.floor(_timer)).toString();
+			_timerText.text = "  TIME: " + (10 - Math.floor(_timer)).toString();
 			_scoreText.text = "SCORE: " + _score.toString();
 			if (_combo > 1)
 			{
@@ -184,11 +184,12 @@ package
 			}
 		}
 		
-		private function levelUp():void
+		private function levelUp(initialization:Boolean = false):void
 		{
 			_pointTarget = _score + (POINTS_PER_LEVEL * ++_levelCounter);
-			_goalText.text = "GOAL: " + _pointTarget.toString();
-			FlxG.play(levelUpSound, SOUND_VOLUME);
+			_goalText.text = "  GOAL: " + _pointTarget.toString();
+			if (!initialization)
+				FlxG.play(levelUpSound, SOUND_VOLUME);
 		}
 		
 		private function updateBackgroundParticles():void
@@ -217,7 +218,7 @@ package
 		
 		private function finish():void
 		{
-			FlxG.switchState(new ResultsState(_score));
+			FlxG.switchState(new ResultsState(_score, _pointTarget, _levelCounter));
 		}
 	}
 
