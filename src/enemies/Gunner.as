@@ -7,7 +7,7 @@ package enemies
 	 */
 	public class Gunner extends Enemy 
 	{
-		[Embed(source = "../assets/images/gunner.png")] private var sprite:Class
+		[Embed(source = "../assets/images/gunner.png")] private static var sprite:Class
 		
 		private static const LEFT_START_PATH:Vector.<FlxPoint> = Utils.stringToPath("60,25; 260,25; 160,25; 160,270");
 		private static const RIGHT_START_PATH:Vector.<FlxPoint> = Utils.stringToPath("260,25; 60,25; 160,25; 160,270");

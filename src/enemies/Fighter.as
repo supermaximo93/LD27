@@ -7,7 +7,7 @@ package enemies
 	 */
 	public class Fighter extends Enemy 
 	{
-		[Embed(source = "../assets/images/fighter.png")] private var sprite:Class
+		[Embed(source = "../assets/images/fighter.png")] private static var sprite:Class
 		
 		private static const PATHS:Vector.<Vector.<FlxPoint>> = new Vector.<Vector.<FlxPoint>>;
 		private static const HEALTH:int = 3;

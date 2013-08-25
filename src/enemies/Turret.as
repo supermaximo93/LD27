@@ -7,7 +7,7 @@ package enemies
 	 */
 	public class Turret extends Enemy 
 	{
-		[Embed(source = "../assets/images/turret.png")] private var sprite:Class
+		[Embed(source = "../assets/images/turret.png")] private static var sprite:Class
 		
 		private static const HEALTH:int = 6;
 		private static const SHOOT_TIME:Number = 1;

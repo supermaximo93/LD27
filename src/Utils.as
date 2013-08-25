@@ -8,6 +8,8 @@ package
 	 */
 	public class Utils 
 	{
+		[Embed(source = "assets/sounds/explosion.mp3")] private static var explosionSound:Class
+		
 		public static function getNormalizedVector(x:Number, y:Number):FlxPoint
 		{
 			if (x == 0)
@@ -47,6 +49,7 @@ package
 			for (var i:int = 0; i < PARTICLE_COUNT; ++i)
 				ExplosionParticle.getNewExplosionParticle(x, y, colors[int(Math.floor(Math.random() * colors.length))]);
 			FlxG.shake(0.02, 0.2);
+			FlxG.play(explosionSound);
 		}
 	}
 

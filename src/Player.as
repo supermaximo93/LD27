@@ -8,7 +8,10 @@ package
 	 */
 	public class Player extends FlxSprite 
 	{
-		[Embed(source = "assets/images/player.png")] private var sprite:Class
+		[Embed(source = "assets/sounds/respawn.mp3")] public static var respawnSound:Class
+		[Embed(source = "assets/sounds/shoot.mp3")] private static var shootSound:Class
+		[Embed(source = "assets/sounds/uninvincible.mp3")] private static var uninvincibleSound:Class
+		[Embed(source = "assets/images/player.png")] private static var sprite:Class
 		
 		private static const ACCELERATION:Number = 1500;
 		private static const MAX_VELOCITY:Number = 300;
@@ -85,7 +88,8 @@ package
 		{
 			if (_shootTimer >= SHOOT_TIME)
 			{
-				Bullet.getNewPlayerBullet(x + (width / 2.0), y, new FlxPoint(0, -1000), 0, 0xFF349933);
+				Bullet.getNewPlayerBullet(x + (width / 2.0) - (Bullet.BULLET_SIZE / 2), y, new FlxPoint(0, -1000), 0, 0xFF349933);
+				FlxG.play(shootSound);
 				_shootTimer = 0;
 			}
 		}
@@ -132,7 +136,10 @@ package
 			{
 				_invincibilityTimer -= FlxG.elapsed;
 				if (_invincibilityTimer <= 0)
+				{
 					visible = true;
+					FlxG.play(uninvincibleSound, 1.4);
+				}
 				else
 					visible = Math.floor(_invincibilityTimer * 100) % 2 == 0;
 			}

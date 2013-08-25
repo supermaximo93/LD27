@@ -9,6 +9,8 @@ package
 	 */
 	public class PlayState extends FlxState 
 	{
+		[Embed(source = "assets/sounds/levelup.mp3")] private static var levelUpSound:Class
+		
 		private static const POINTS_PER_LEVEL:int = 1000;
 		private static const BACKGROUND_PARTICLE_TIME:Number = 0.001;
 		private static const PLAYER_RESPAWN_TIME:Number = 0.5;
@@ -161,6 +163,7 @@ package
 		{
 			_pointTarget = FlxG.score + (POINTS_PER_LEVEL * ++_levelCounter);
 			_goalText.text = "GOAL: " + _pointTarget.toString();
+			FlxG.play(levelUpSound);
 		}
 		
 		private function updateBackgroundParticles():void
@@ -176,6 +179,7 @@ package
 		private function respawnPlayer(timer:FlxTimer):void
 		{
 			_player.reset(PLAYER_START_X, PLAYER_START_Y);
+			FlxG.play(Player.respawnSound);
 		}
 		
 		private function breakCombo():void
