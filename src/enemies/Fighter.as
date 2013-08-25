@@ -26,10 +26,12 @@ package enemies
 			initialize();
 		}
 		
-		private static var _fighers:FlxGroup = new FlxGroup();
+		private static var _fighers:FlxGroup;
 		
 		public static function get fighters():FlxGroup
 		{
+			if (_fighers == null || _fighers.members == null)
+				_fighers = new FlxGroup;
 			return _fighers;
 		}
 		

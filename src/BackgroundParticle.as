@@ -12,10 +12,12 @@ package
 		private static const SPEED:Number = 1200;
 		private static const COLORS:Array = [0xFFFE71CD, 0xFFFF8C66, 0xFF72FED0, 0xFFBBFFB8, 0xFF626237];
 		
-		private static var _backgroundParticles:FlxGroup = new FlxGroup;
+		private static var _backgroundParticles:FlxGroup;
 		
-		public static function get backgrounParticles():FlxGroup
+		public static function get backgroundParticles():FlxGroup
 		{
+			if (_backgroundParticles == null || _backgroundParticles.members == null)
+				_backgroundParticles = new FlxGroup;
 			return _backgroundParticles;
 		}
 		

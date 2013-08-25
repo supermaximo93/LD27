@@ -19,6 +19,7 @@ package
 		private static const PLAYER_RESPAWN_TIME:Number = 0.5;
 		private static const PLAYER_START_X:Number = 160;
 		private static const PLAYER_START_Y:Number = 200;
+		private static const GAME_OVER_DELAY:Number = 2;
 		
 		private static var _instance:PlayState;
 		
@@ -35,7 +36,7 @@ package
 		
 		public static function addToScore(points:int):void
 		{
-			FlxG.score += points;
+			_instance._score += points;
 			_instance._scoreSinceComboBroken += points;
 			++_instance._combo;
 		}
@@ -51,14 +52,16 @@ package
 		private var _backgroundParticleTimer:Number;
 		private var _enemySpawner:EnemySpawner;
 		private var _playerRespawnTimer:FlxTimer;
+		private var _score:int;
 		private var _combo:int;
 		private var _scoreSinceComboBroken:int;
+		private var _gameOver:Boolean;
+		private var _gameOverTimer:Number;
 		
 		public override function create():void
-		{
+		{			
 			_instance = this;
-			FlxG.bgColor = 0xFFFFB8B3;
-			add(BackgroundParticle.backgrounParticles);
+			add(BackgroundParticle.backgroundParticles);
 			add(Powerup.powerups);
 			add(Bullet.playerBullets);
 			add(Bullet.enemyBullets);
@@ -86,21 +89,16 @@ package
 			_playerRespawnTimer = new FlxTimer();
 			_levelCounter = 0;
 			levelUp();
+			_score = 0;
 			_combo = 0;
 			_scoreSinceComboBroken = 0;
+			_gameOver = false;
 			FlxG.playMusic(music, MUSIC_VOLUME);
 		}
 		
 		public override function destroy():void 
 		{
 			_instance = null;
-			BackgroundParticle.backgrounParticles.clear();
-			Bullet.playerBullets.clear();
-			Bullet.enemyBullets.clear();
-			Turret.turrets.clear();
-			Fighter.fighters.clear();
-			Gunner.gunners.clear();
-			ExplosionParticle.explosionParticles.clear();
 			super.destroy();
 			FlxG.music.stop();
 		}
@@ -108,10 +106,19 @@ package
 		public override function update():void
 		{
 			handleInput();
-			handleCollisions();
-			updateScore();
+			if (_gameOver)
+			{
+				_gameOverTimer -= FlxG.elapsed;
+				if (_gameOverTimer <= 0)
+					finish();
+			}
+			else
+			{
+				handleCollisions();
+				updateScore();
+				_enemySpawner.update();
+			}
 			updateBackgroundParticles();
-			_enemySpawner.update();
 			super.update();
 		}
 		
@@ -152,17 +159,19 @@ package
 			{
 				_timer = 0;
 				breakCombo();
-				if (FlxG.score >= _pointTarget)
+				if (_score >= _pointTarget)
 					levelUp();
 				else
 				{
 					if (player.alive)
 						_player.loseGameKill();
 					_playerRespawnTimer.stop();
+					_gameOver = true;
+					_gameOverTimer = GAME_OVER_DELAY;
 				}
 			}
 			_timerText.text = "TIME: " + (10 - Math.floor(_timer)).toString();
-			_scoreText.text = "SCORE: " + FlxG.score.toString();
+			_scoreText.text = "SCORE: " + _score.toString();
 			if (_combo > 1)
 			{
 				_scoreText.text += " + " + _scoreSinceComboBroken.toString();
@@ -173,7 +182,7 @@ package
 		
 		private function levelUp():void
 		{
-			_pointTarget = FlxG.score + (POINTS_PER_LEVEL * ++_levelCounter);
+			_pointTarget = _score + (POINTS_PER_LEVEL * ++_levelCounter);
 			_goalText.text = "GOAL: " + _pointTarget.toString();
 			FlxG.play(levelUpSound, SOUND_VOLUME);
 		}
@@ -197,9 +206,14 @@ package
 		private function breakCombo():void
 		{	
 			if (_combo > 0)
-				FlxG.score += _scoreSinceComboBroken * (_combo - 1);
+				_score += _scoreSinceComboBroken * (_combo - 1);
 			_scoreSinceComboBroken = 0;
 			_combo = 0;
+		}
+		
+		private function finish():void
+		{
+			FlxG.switchState(new ResultsState(_score));
 		}
 	}
 

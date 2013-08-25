@@ -13,7 +13,7 @@ package
 		
 		public function Main():void 
 		{
-			super(320, 240, PlayState, 2, 60, 60);
+			super(320, 240, MenuState, 2, 60, 60);
 		}
 		
 	}

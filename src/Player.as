@@ -181,6 +181,7 @@ package
 			Utils.createExplosion(centerX + 10, centerY, EXPLOSION_COLORS);
 			Utils.createExplosion(centerX, centerY + 10, EXPLOSION_COLORS);
 			Utils.createExplosion(centerX, centerY - 10, EXPLOSION_COLORS);
+			kill();
 		}
 		
 		public function applyPowerup(powerup:Powerup):void

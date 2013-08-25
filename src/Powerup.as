@@ -17,10 +17,12 @@ package
 		private static const POWERUP_TYPE_COUNT:int = 3;
 		private static const POWERUP_LIFETIME:Number = 3;
 		
-		private static var _powerups:FlxGroup = new FlxGroup;
+		private static var _powerups:FlxGroup;
 		
 		public static function get powerups():FlxGroup
 		{
+			if (_powerups == null || _powerups.members == null)
+				_powerups = new FlxGroup;
 			return _powerups;
 		}
 		

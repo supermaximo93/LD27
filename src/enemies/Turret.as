@@ -14,10 +14,12 @@ package enemies
 		private static const BULLET_SPEED:Number = 350;
 		private static const EXPLOSION_COLORS:Array = [0xFF9C33FF, 0xFFC300FF, 0xFF6819B3, 0xFFC78CD9];
 		
-		private static var _turrets:FlxGroup = new FlxGroup;
+		private static var _turrets:FlxGroup;
 		
 		public static function get turrets():FlxGroup
 		{
+			if (_turrets == null || _turrets.members == null)
+				_turrets = new FlxGroup;
 			return _turrets;
 		}
 		

@@ -10,16 +10,20 @@ package
 	{
 		public static const BULLET_SIZE:uint = 5;
 		
-		private static var _playerBullets:FlxGroup = new FlxGroup;
-		private static var _enemyBullets:FlxGroup = new FlxGroup;
+		private static var _playerBullets:FlxGroup;
+		private static var _enemyBullets:FlxGroup;
 		
 		public static function get playerBullets():FlxGroup
 		{
+			if (_playerBullets == null || _playerBullets.members == null)
+				_playerBullets = new FlxGroup;
 			return _playerBullets;
 		}
 		
 		public static function get enemyBullets():FlxGroup
 		{
+			if (_enemyBullets == null || _enemyBullets.members == null)
+				_enemyBullets = new FlxGroup;
 			return _enemyBullets;
 		}
 		

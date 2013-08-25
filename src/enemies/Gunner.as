@@ -20,10 +20,12 @@ package enemies
 		private static const BULLET_COLOR:uint = 0xFF732626;
 		private static const EXPLOSION_COLORS:Array = [0xFF732626, 0xFFDF1F20, 0xFF3B2B2B, 0xFFDF207C];
 		
-		private static var _gunners:FlxGroup = new FlxGroup;
+		private static var _gunners:FlxGroup;
 		
 		public static function get gunners():FlxGroup
 		{
+			if (_gunners == null || _gunners.members == null)
+				_gunners = new FlxGroup;
 			return _gunners;
 		}
 		

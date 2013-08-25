@@ -18,10 +18,12 @@ package
 		private static const CONSTANT_Y_SPEED:Number = 400;
 		private static const ACCELERATION_Y:Number = 2000;
 		
-		private static var _explosionParticles:FlxGroup = new FlxGroup;
+		private static var _explosionParticles:FlxGroup;
 		
 		public static function get explosionParticles():FlxGroup
 		{
+			if (_explosionParticles == null || _explosionParticles.members == null)
+				_explosionParticles = new FlxGroup;
 			return _explosionParticles;
 		}
 		
