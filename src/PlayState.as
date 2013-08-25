@@ -11,12 +11,20 @@ package
 	{
 		private static const POINTS_PER_LEVEL:int = 1000;
 		private static const BACKGROUND_PARTICLE_TIME:Number = 0.001;
+		private static const PLAYER_RESPAWN_TIME:Number = 0.5;
+		private static const PLAYER_START_X:Number = 100;
+		private static const PLAYER_START_Y:Number = 100;
 		
 		private static var _instance:PlayState;
 		
 		public static function get player():Player
 		{
 			return _instance == null ? null : _instance._player;
+		}
+		
+		public static function startPlayerRespawnTimer():void
+		{
+			_instance._playerRespawnTimer.start(PLAYER_RESPAWN_TIME, 1, _instance.respawnPlayer);
 		}
 		
 		private var _player:Player;
@@ -28,6 +36,7 @@ package
 		private var _scoreText:FlxText;
 		private var _backgroundParticleTimer:Number;
 		private var _enemySpawner:EnemySpawner;
+		private var _playerRespawnTimer:FlxTimer;
 		
 		public override function create():void
 		{
@@ -41,7 +50,7 @@ package
 			_enemies.add(Fighter.fighters);
 			_enemies.add(Gunner.gunners);
 			add(_enemies);
-			_player = new Player(100, 100);
+			_player = new Player(PLAYER_START_X, PLAYER_START_Y);
 			add(_player);
 			add(ExplosionParticle.explosionParticles);
 			_levelCounter = 0;
@@ -54,9 +63,10 @@ package
 			_backgroundParticleTimer = 0;
 			_enemySpawner = new EnemySpawner();
 			_enemySpawner.start();
+			_playerRespawnTimer = new FlxTimer();
 		}
 		
-		override public function destroy():void 
+		public override function destroy():void 
 		{
 			_instance = null;
 			BackgroundParticle.backgrounParticles.clear();
@@ -135,6 +145,11 @@ package
 				_backgroundParticleTimer -= BACKGROUND_PARTICLE_TIME;
 				BackgroundParticle.getNewBackgroundParticle();
 			}
+		}
+		
+		private function respawnPlayer(timer:FlxTimer):void
+		{
+			_player.reset(PLAYER_START_X, PLAYER_START_Y);
 		}
 	}
 

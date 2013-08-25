@@ -46,7 +46,7 @@ package
 			const PARTICLE_COUNT:int = 10;
 			for (var i:int = 0; i < PARTICLE_COUNT; ++i)
 				ExplosionParticle.getNewExplosionParticle(x, y, colors[int(Math.floor(Math.random() * colors.length))]);
-			FlxG.shake(0.03, 0.2);
+			FlxG.shake(0.02, 0.2);
 		}
 	}
 

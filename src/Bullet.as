@@ -7,7 +7,9 @@ package
 	 * @author Max Foster
 	 */
 	public class Bullet extends FlxSprite 
-	{		
+	{
+		public static const BULLET_SIZE:uint = 5;
+		
 		private static var _playerBullets:FlxGroup = new FlxGroup;
 		private static var _enemyBullets:FlxGroup = new FlxGroup;
 		
@@ -63,7 +65,7 @@ package
 		public function resetBullet(x:Number, y:Number, velocity:FlxPoint, sineSpeed:Number, color:uint):void
 		{
 			super.reset(x, y);
-			makeGraphic(5, 5, color);
+			makeGraphic(BULLET_SIZE, BULLET_SIZE, color);
 			this.velocity.copyFrom(velocity);
 			maxVelocity.x = Math.abs(velocity.x);
 			maxVelocity.y = Math.abs(velocity.y);

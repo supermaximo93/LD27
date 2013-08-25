@@ -67,16 +67,10 @@ package enemies
 		}
 		
 		private function shoot():void
-		{
-			if (PlayState.player == null || !PlayState.player.alive)
-				return;
-			
-			var bulletX:Number = x + (width / 2);
-			var bulletY:Number = y + height;
-			var bulletVelocity:FlxPoint = Utils.getNormalizedVector(PlayState.player.x - bulletX, PlayState.player.y - bulletY);
-			bulletVelocity.x *= BULLET_SPEED;
-			bulletVelocity.y *= BULLET_SPEED;
-			Bullet.getNewEnemyBullet(bulletX, bulletY, bulletVelocity, 0, 0xFF9C33FF);
+		{		
+			var bulletX:Number = x + (width / 2) - (Bullet.BULLET_SIZE / 2);
+			var bulletY:Number = y + height - (Bullet.BULLET_SIZE / 2);
+			Bullet.getNewEnemyBullet(bulletX, bulletY, new FlxPoint(0, BULLET_SPEED), 0, 0xFF9C33FF);
 		}
 	}
 

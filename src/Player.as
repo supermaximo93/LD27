@@ -10,6 +10,15 @@ package
 	{
 		[Embed(source = "assets/images/player.png")] private var sprite:Class
 		
+		private static const ACCELERATION:Number = 1500;
+		private static const MAX_VELOCITY:Number = 300;
+		private static const DRAG:Number = 1500;
+		private static const SHOOT_TIME:Number = 0.05;
+		private static const HITBOX_SCALE_X:Number = 0.2;
+		private static const HITBOX_SCALE_Y:Number = 0.2;
+		private static const EXPLOSION_COLORS:Array = [0xFF349933, 0xFF386237, 0xFF00FF01, 0xFF7EDF20];
+		private static const INVINCIBILITY_TIME:Number = 1.5;
+		
 		public static function bulletCollision(obj1:FlxObject, obj2:FlxObject):void
 		{
 			var bullet:FlxObject;
@@ -25,33 +34,39 @@ package
 			bullet.kill();
 		}
 		
-		private static const ACCELERATION:Number = 1500;
-		private static const MAX_VELOCITY:Number = 300;
-		private static const DRAG:Number = 1500;
-		private static const SHOOT_TIME:Number = 0.05;
-		private static const HITBOX_SCALE_X:Number = 0.2;
-		private static const HITBOX_SCALE_Y:Number = 0.2;
-		private static const EXPLOSION_COLORS:Array = [0xFF349933, 0xFF386237, 0xFF00FF01, 0xFF7EDF20];
-		
 		private var _previousAcceleration:FlxPoint;
 		private var _shootTimer:Number;
 		private var _originalWidth:Number;
 		private var _originalHeight:Number;
+		private var _invincibilityTimer:Number;
+		
+		public function get isInvincible():Boolean
+		{
+			return _invincibilityTimer > 0;
+		}
 		
 		public function Player(x:Number, y:Number) 
 		{
 			super(x, y, sprite);
-			maxVelocity.x = MAX_VELOCITY;
-			maxVelocity.y = MAX_VELOCITY;
-			drag.x = DRAG;
-			drag.y = DRAG;
-			_previousAcceleration = new FlxPoint();
-			_shootTimer = 0;
 			_originalWidth = width;
 			_originalHeight = height;
 			width *= HITBOX_SCALE_X;
 			height *= HITBOX_SCALE_Y;
 			centerOffsets();
+			maxVelocity.x = MAX_VELOCITY;
+			maxVelocity.y = MAX_VELOCITY;
+			drag.x = DRAG;
+			drag.y = DRAG;
+			_previousAcceleration = new FlxPoint();
+			reset(x, y);
+			_invincibilityTimer = 0;
+		}
+		
+		public override function reset(x:Number, y:Number):void
+		{
+			super.reset(x, y);
+			_shootTimer = 0;
+			_invincibilityTimer = INVINCIBILITY_TIME;
 		}
 		
 		public function move(xDirection:int, yDirection:int):void
@@ -78,7 +93,23 @@ package
 		public override function update():void 
 		{
 			_shootTimer += FlxG.elapsed;
-			
+			updateVelocity();
+			updateInvincibility();
+			super.update();
+		}
+		
+		public function enemyKill():void
+		{
+			if (!isInvincible)
+			{
+				Utils.createExplosion(x + (width / 2) + offset.x, y + (height / 2) + offset.y, EXPLOSION_COLORS);
+				PlayState.startPlayerRespawnTimer();
+				kill();
+			}
+		}
+		
+		private function updateVelocity():void
+		{
 			var potentialX:Number = x + (velocity.x * FlxG.elapsed);
 			var potentialY:Number = y + (velocity.y * FlxG.elapsed);
 			var leftBorder:Number = (-_originalWidth / 2) + offset.x;
@@ -93,14 +124,18 @@ package
 				velocity.y = (topBorder - y) / FlxG.elapsed;
 			else if (potentialY > bottomBorder)
 				velocity.y = (bottomBorder - y) / FlxG.elapsed;
-			
-			super.update();
 		}
 		
-		public function enemyKill():void
+		private function updateInvincibility():void
 		{
-			Utils.createExplosion(x + (width / 2) + offset.x, y + (height / 2) + offset.y, EXPLOSION_COLORS);
-			kill();
+			if (_invincibilityTimer > 0)
+			{
+				_invincibilityTimer -= FlxG.elapsed;
+				if (_invincibilityTimer <= 0)
+					visible = true;
+				else
+					visible = Math.floor(_invincibilityTimer * 100) % 2 == 0;
+			}
 		}
 	}
 

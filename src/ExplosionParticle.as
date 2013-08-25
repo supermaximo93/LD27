@@ -12,7 +12,7 @@ package
 		private static const MAX_SPEED:Number = 600;
 		private static const MIN_SIZE:Number = 4;
 		private static const MAX_SIZE:Number = 8;
-		private static const LIFETIME:Number = 0.7;
+		private static const LIFETIME:Number = 0.1;
 		private static const DRAG:Number = 2000;
 		private static const DRAG_TIME:Number = 0.2;
 		private static const CONSTANT_Y_SPEED:Number = 400;
