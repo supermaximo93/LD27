@@ -37,6 +37,23 @@ package
 			bullet.kill();
 		}
 		
+		public static function enemyCollision(obj1:FlxObject, obj2:FlxObject):void
+		{
+			var enemy:Enemy;
+			var player:Player = obj1 as Player;
+			if (obj1 == null)
+			{
+				player = obj2 as Player;
+				enemy = obj1 as Enemy;
+			}
+			else
+				enemy = obj2 as Enemy;
+			player.enemyKill();
+			enemy.takeDamage();
+			if (enemy.health > 0)
+				enemy.takeDamage();
+		}
+		
 		private var _previousAcceleration:FlxPoint;
 		private var _shootTimer:Number;
 		private var _originalWidth:Number;
