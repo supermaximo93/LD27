@@ -9,12 +9,27 @@ package
 	{
 		[Embed(source = "assets/music/menu.mp3")] private static var music:Class
 		
+		private static const HELP_TEXT:Array = [
+			"ARROW KEYS TO MOVE",
+			"SPACE TO FIRE",
+			"REACH THE GOAL SCORE WITHIN 10 SECONDS",
+			"THE GOAL SCORE INCREASES WHEN YOU BEAT IT",
+			"BLOW STUFF UP AND DON'T DIE TO BUILD COMBOS"
+		]
+		
 		public override function create():void
 		{
 			FlxG.bgColor = 0xFFFFB8B3;
 			FlxG.playMusic(music);
 			FlxG.music.ID = Main.MENU_MUSIC_ID;
 			add(BackgroundParticle.backgroundParticles);
+			
+			for (var i:int = 0; i < HELP_TEXT.length; ++i)
+			{
+				var text:FlxText = new FlxText(0, 100 + (i * 20), 500, HELP_TEXT[i]);
+				Utils.centerAndColorText(text);
+				add(text);
+			}
 		}
 		
 		public override function update():void

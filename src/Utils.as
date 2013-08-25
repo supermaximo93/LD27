@@ -51,6 +51,14 @@ package
 			FlxG.shake(0.02, 0.2);
 			FlxG.play(explosionSound, PlayState.SOUND_VOLUME);
 		}
+		
+		public static function centerAndColorText(text:FlxText):void
+		{
+			text.color = 0xFF000000;
+			text.x = 0;
+			text.width = FlxG.width;
+			text.alignment = "center";
+		}
 	}
 
 }

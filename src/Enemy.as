@@ -17,6 +17,47 @@ package
 		private static const HEALTH_MULTIPLIER_FOR_SCORE:int = 10;
 		private static const SCREEN_BORDER:Number = 10;
 		private static const POWERUP_SPAWN_CHANCE:Number = 0.1;
+		private static const SCORE_TEXT_TIME:Number = 0.3;		
+		private static var _scoreTexts:FlxGroup;
+		
+		public static function get scoreTexts():FlxGroup
+		{
+			if (_scoreTexts == null || _scoreTexts.members == null)
+				_scoreTexts = new FlxGroup;
+			return _scoreTexts;
+		}
+		
+		public static function getNewScoreText(x:Number, y:Number, score:int):FlxText
+		{
+			var text:FlxText = _scoreTexts.getFirstAvailable(FlxText) as FlxText;
+			if (text == null)
+			{
+				text = new FlxText(x, y, 40);
+				text.color = 0xFF000000;
+				_scoreTexts.add(text);
+			}
+			else
+				text.reset(x, y);
+			text.text = score.toString();
+			text.mass = SCORE_TEXT_TIME; // using mass as a timer
+			return text;
+		}
+		
+		public static function updateScoreText():void
+		{
+			var text:FlxText;
+			var length:int = _scoreTexts.members.length;
+			for (var i:int = 0; i < length; ++i)
+			{
+				text = _scoreTexts.members[i];
+				if (text != null && text.alive)
+				{
+					text.mass -= FlxG.elapsed;
+					if (text.mass <= 0)
+						text.kill();
+				}
+			}
+		}
 		
 		public static function bulletCollision(obj1:FlxObject, obj2:FlxObject):void
 		{
@@ -134,9 +175,11 @@ package
 		
 		private function playerKill():void
 		{
-			PlayState.addToScore(_maxHealth * HEALTH_MULTIPLIER_FOR_SCORE);
 			var centerX:Number = x + (width / 2);
 			var centerY:Number = y + (height / 2)
+			var score:int = _maxHealth * HEALTH_MULTIPLIER_FOR_SCORE;
+			PlayState.addToScore(score);
+			getNewScoreText(centerX, centerY, score);
 			Utils.createExplosion(centerX, centerY, explosionColors);
 			if (Math.random() <= POWERUP_SPAWN_CHANCE)
 				Powerup.getNewPowerup(centerX, centerY);

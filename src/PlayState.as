@@ -71,6 +71,7 @@ package
 			_player = new Player(PLAYER_START_X, PLAYER_START_Y);
 			add(_player);
 			add(ExplosionParticle.explosionParticles);
+			add(Enemy.scoreTexts);
 			_scoreText = new FlxText(2, 2, 200);
 			_scoreText.color = 0xff000000;
 			_goalText = new FlxText(2, 12, 200);
@@ -120,6 +121,7 @@ package
 				_enemySpawner.update();
 			}
 			BackgroundParticle.getNewBackgroundParticle();
+			Enemy.updateScoreText();
 			super.update();
 		}
 		
