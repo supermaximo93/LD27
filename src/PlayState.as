@@ -59,6 +59,7 @@ package
 			_instance = this;
 			FlxG.bgColor = 0xFFFFB8B3;
 			add(BackgroundParticle.backgrounParticles);
+			add(Powerup.powerups);
 			add(Bullet.playerBullets);
 			add(Bullet.enemyBullets);
 			_enemies = new FlxGroup;
@@ -141,6 +142,7 @@ package
 			FlxG.overlap(_player, Bullet.enemyBullets, Player.bulletCollision);
 			FlxG.overlap(_enemies, Bullet.playerBullets, Enemy.bulletCollision);
 			FlxG.overlap(_player, _enemies, Player.enemyCollision);
+			FlxG.overlap(_player, Powerup.powerups, Player.powerupCollision);
 		}
 		
 		private function updateScore():void

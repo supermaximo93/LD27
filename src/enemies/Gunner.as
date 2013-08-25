@@ -127,7 +127,7 @@ package enemies
 		{
 			var halfBulletSize:Number = Bullet.BULLET_SIZE / 2;
 			Bullet.getNewEnemyBullet(x + (width / 2) - halfBulletSize, y + height - Bullet.BULLET_SIZE, new FlxPoint(0, SPREAD_BULLET_SPEED), 0, BULLET_COLOR);
-			var bulletVelocity:FlxPoint = new FlxPoint(-1.414 * SPREAD_BULLET_SPEED, 1.414 * SPREAD_BULLET_SPEED);
+			var bulletVelocity:FlxPoint = new FlxPoint(-0.707 * SPREAD_BULLET_SPEED, 0.707 * SPREAD_BULLET_SPEED);
 			Bullet.getNewEnemyBullet(x + (width / 2) - 12, y + height - 12, bulletVelocity, 0, BULLET_COLOR);
 			bulletVelocity.x = -bulletVelocity.x;
 			Bullet.getNewEnemyBullet(x + (width / 2) + 12, y + height - 12, bulletVelocity, 0, BULLET_COLOR);

@@ -16,6 +16,7 @@ package
 		private static const POINT_TOLERANCE:Number = 5;
 		private static const HEALTH_MULTIPLIER_FOR_SCORE:int = 10;
 		private static const SCREEN_BORDER:Number = 10;
+		private static const POWERUP_SPAWN_CHANCE:Number = 0.1;
 		
 		public static function bulletCollision(obj1:FlxObject, obj2:FlxObject):void
 		{
@@ -134,7 +135,11 @@ package
 		private function playerKill():void
 		{
 			PlayState.addToScore(_maxHealth * HEALTH_MULTIPLIER_FOR_SCORE);
-			Utils.createExplosion(x + (width / 2), y + (height / 2), explosionColors);
+			var centerX:Number = x + (width / 2);
+			var centerY:Number = y + (height / 2)
+			Utils.createExplosion(centerX, centerY, explosionColors);
+			if (Math.random() <= POWERUP_SPAWN_CHANCE)
+				Powerup.getNewPowerup(centerX, centerY);
 			kill();
 		}
 		

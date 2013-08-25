@@ -21,6 +21,10 @@ package
 		private static const HITBOX_SCALE_Y:Number = 0.1;
 		private static const EXPLOSION_COLORS:Array = [0xFF349933, 0xFF386237, 0xFF00FF01, 0xFF7EDF20];
 		private static const INVINCIBILITY_TIME:Number = 1.5;
+		private static const POWERUP_TIME:Number = 3;
+		private static const BULLET_COLOR:uint = 0xFF349933;
+		private static const BULLET_SPEED:Number = 1000;
+		private static const SINE_BULLET_SPEED_Y:Number = 200;
 		
 		public static function bulletCollision(obj1:FlxObject, obj2:FlxObject):void
 		{
@@ -54,11 +58,28 @@ package
 				enemy.takeDamage();
 		}
 		
+		public static function powerupCollision(obj1:FlxObject, obj2:FlxObject):void
+		{
+			var powerup:Powerup;
+			var player:Player = obj1 as Player;
+			if (obj1 == null)
+			{
+				player = obj2 as Player;
+				powerup = obj1 as Powerup;
+			}
+			else
+				powerup = obj2 as Powerup;
+			player.applyPowerup(powerup);
+			powerup.kill();
+		}
+		
 		private var _previousAcceleration:FlxPoint;
 		private var _shootTimer:Number;
 		private var _originalWidth:Number;
 		private var _originalHeight:Number;
 		private var _invincibilityTimer:Number;
+		private var _currentPowerup:int;
+		private var _powerupTimer:Number;
 		
 		public function get isInvincible():Boolean
 		{
@@ -87,6 +108,8 @@ package
 			super.reset(x, y);
 			_shootTimer = 0;
 			_invincibilityTimer = INVINCIBILITY_TIME;
+			_currentPowerup = -1;
+			_powerupTimer = 0;
 		}
 		
 		public function move(xDirection:int, yDirection:int):void
@@ -105,7 +128,26 @@ package
 		{
 			if (_shootTimer >= SHOOT_TIME)
 			{
-				Bullet.getNewPlayerBullet(x + (width / 2.0) - (Bullet.BULLET_SIZE / 2), y, new FlxPoint(0, -1000), 0, 0xFF349933);
+				var bulletX:Number = x + (width / 2.0) - (Bullet.BULLET_SIZE / 2);
+				switch (_currentPowerup)
+				{
+				case Powerup.SPREAD:
+					Bullet.getNewPlayerBullet(bulletX, y, new FlxPoint(0, -BULLET_SPEED), 0, BULLET_COLOR);
+					Bullet.getNewPlayerBullet(bulletX, y, new FlxPoint(-0.707 * BULLET_SPEED, -0.707 * BULLET_SPEED), 0, BULLET_COLOR);
+					Bullet.getNewPlayerBullet(bulletX, y, new FlxPoint(0.707 * BULLET_SPEED, -0.707 * BULLET_SPEED), 0, BULLET_COLOR);
+					break;
+				case Powerup.SINE:
+					Bullet.getNewPlayerBullet(bulletX, y, new FlxPoint(50, -SINE_BULLET_SPEED_Y), 10, BULLET_COLOR);
+					Bullet.getNewPlayerBullet(bulletX, y, new FlxPoint(50, -SINE_BULLET_SPEED_Y), -10, BULLET_COLOR);
+					break;
+				case Powerup.DOUBLE:
+					Bullet.getNewPlayerBullet(bulletX + 5, y, new FlxPoint(0, -BULLET_SPEED), 0, BULLET_COLOR);
+					Bullet.getNewPlayerBullet(bulletX - 5, y, new FlxPoint(0, -BULLET_SPEED), 0, BULLET_COLOR);
+					break;
+				default:
+					Bullet.getNewPlayerBullet(bulletX, y, new FlxPoint(0, -BULLET_SPEED), 0, BULLET_COLOR);
+					break;
+				}
 				FlxG.play(shootSound, PlayState.SOUND_VOLUME);
 				_shootTimer = 0;
 			}
@@ -116,6 +158,7 @@ package
 			_shootTimer += FlxG.elapsed;
 			updateVelocity();
 			updateInvincibility();
+			updatePowerup();
 			super.update();
 		}
 		
@@ -127,6 +170,12 @@ package
 				PlayState.startPlayerRespawnTimer();
 				kill();
 			}
+		}
+		
+		public function applyPowerup(powerup:Powerup):void
+		{
+			_currentPowerup = powerup.powerupType;
+			_powerupTimer = POWERUP_TIME;
 		}
 		
 		private function updateVelocity():void
@@ -159,6 +208,16 @@ package
 				}
 				else
 					visible = Math.floor(_invincibilityTimer * 100) % 2 == 0;
+			}
+		}
+		
+		private function updatePowerup():void
+		{
+			if (_powerupTimer > 0)
+			{
+				_powerupTimer -= FlxG.elapsed;
+				if (_powerupTimer <= 0)
+					_currentPowerup = -1;
 			}
 		}
 	}
