@@ -28,12 +28,19 @@ package
 			add(BackgroundParticle.backgroundParticles);
 			add(new FlxSprite(15, 20, skyTurkeysSprite));
 			add(new FlxSprite(125, 60, extremeSprite));
+			var text:FlxText;
 			for (var i:int = 0; i < HELP_TEXT.length; ++i)
 			{
-				var text:FlxText = new FlxText(0, 100 + (i * 20), 500, HELP_TEXT[i]);
+				text = new FlxText(0, 100 + (i * 20), 500, HELP_TEXT[i]);
 				Utils.centerAndColorText(text);
 				add(text);
 			}
+			text = new FlxText(2, 224, 100, "BY MAX FOSTER");
+			text.color = 0xFF000000;
+			add(text);
+			text = new FlxText(227, 224, 100, "@SUPERMAXIMO93");
+			text.color = 0xFF000000;
+			add(text);
 		}
 		
 		public override function update():void
