@@ -14,12 +14,15 @@ package
 			FlxG.bgColor = 0xFFFFB8B3;
 			FlxG.playMusic(music);
 			FlxG.music.ID = Main.MENU_MUSIC_ID;
+			add(BackgroundParticle.backgroundParticles);
 		}
 		
 		public override function update():void
 		{
+			BackgroundParticle.getNewBackgroundParticle();
 			if (FlxG.keys.SPACE)
 				FlxG.switchState(new PlayState);
+			super.update();
 		}
 	}
 

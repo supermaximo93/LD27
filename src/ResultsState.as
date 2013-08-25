@@ -27,6 +27,8 @@ package
 		
 		public override function create():void
 		{
+			add(BackgroundParticle.backgroundParticles);
+			
 			var screenCenterY:int = FlxG.height / 2;
 			_gameOverText = new FlxText(0, screenCenterY - 50, 300, "GAME OVER");
 			centerAndColorText(_gameOverText);
@@ -55,10 +57,12 @@ package
 		
 		public override function update():void
 		{
+			BackgroundParticle.getNewBackgroundParticle();
 			if (FlxG.keys.SPACE)
 				FlxG.switchState(new MenuState);
 			if (FlxG.keys.R)
 				FlxG.switchState(new PlayState);
+			super.update();
 		}
 		
 		private function centerAndColorText(text:FlxText):void

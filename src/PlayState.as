@@ -15,7 +15,6 @@ package
 		public static const MUSIC_VOLUME:Number = 1;
 		public static const SOUND_VOLUME:Number = 0.4;
 		private static const POINTS_PER_LEVEL:int = 1000;
-		private static const BACKGROUND_PARTICLE_TIME:Number = 0.001;
 		private static const PLAYER_RESPAWN_TIME:Number = 0.5;
 		private static const PLAYER_START_X:Number = 160;
 		private static const PLAYER_START_Y:Number = 200;
@@ -49,7 +48,6 @@ package
 		private var _goalText:FlxText;
 		private var _timerText:FlxText;
 		private var _timer:Number;
-		private var _backgroundParticleTimer:Number;
 		private var _enemySpawner:EnemySpawner;
 		private var _playerRespawnTimer:FlxTimer;
 		private var _score:int;
@@ -83,7 +81,6 @@ package
 			add(_goalText);
 			add(_scoreText);
 			add(_timerText);
-			_backgroundParticleTimer = 0;
 			_enemySpawner = new EnemySpawner();
 			_enemySpawner.start();
 			_playerRespawnTimer = new FlxTimer();
@@ -122,7 +119,7 @@ package
 				updateScore();
 				_enemySpawner.update();
 			}
-			updateBackgroundParticles();
+			BackgroundParticle.getNewBackgroundParticle();
 			super.update();
 		}
 		
@@ -190,16 +187,6 @@ package
 			_goalText.text = "  GOAL: " + _pointTarget.toString();
 			if (!initialization)
 				FlxG.play(levelUpSound, SOUND_VOLUME);
-		}
-		
-		private function updateBackgroundParticles():void
-		{
-			_backgroundParticleTimer += FlxG.elapsed;
-			if (_backgroundParticleTimer >= BACKGROUND_PARTICLE_TIME)
-			{
-				_backgroundParticleTimer -= BACKGROUND_PARTICLE_TIME;
-				BackgroundParticle.getNewBackgroundParticle();
-			}
 		}
 		
 		private function respawnPlayer(timer:FlxTimer):void
