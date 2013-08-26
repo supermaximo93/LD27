@@ -17,12 +17,15 @@ package
 		private var _levelText:FlxText;
 		private var _restartText:FlxText;
 		private var _menuText:FlxText;
+		private var _kongregateStatusText:FlxText
+		private var _scoreSubmitted:Boolean;
 		
 		public function ResultsState(score:int, target:int, level:int)
 		{
 			_score = score;
 			_target = target;
 			_level = level;
+			_scoreSubmitted = false;
 		}
 		
 		public override function create():void
@@ -53,16 +56,45 @@ package
 			_menuText = new FlxText(0, screenCenterY + 70, 300, "PRESS SPACE TO GO TO MENU");
 			Utils.centerAndColorText(_menuText);
 			add(_menuText);
+			
+			_restartText.visible = false;
+			_menuText.visible = false;
+			_kongregateStatusText = new FlxText(0, _restartText.y, 300, "SENDING SCORE...");
+			Utils.centerAndColorText(_kongregateStatusText);
+			add(_kongregateStatusText);
 		}
 		
 		public override function update():void
 		{
+			if (!_scoreSubmitted)
+			{
+				if (Main.kongregate == null)
+					Main.initializeKongregate(submitScore, hideKongregateStatusText);
+				else
+					submitScore();
+				_scoreSubmitted = true;
+			}
+			
 			BackgroundParticle.getNewBackgroundParticle();
 			if (FlxG.keys.SPACE)
 				FlxG.switchState(new MenuState);
 			if (FlxG.keys.R)
 				FlxG.switchState(new PlayState);
 			super.update();
+		}
+		
+		private function submitScore():void
+		{
+			if (Main.kongregate != null && Main.kongregate.loaded)
+				Main.kongregate.api.stats.submit("HighScore", _score);
+			hideKongregateStatusText();
+		}
+		
+		private function hideKongregateStatusText():void
+		{
+			_kongregateStatusText.visible = false;
+			_restartText.visible = true;
+			_menuText.visible = true;
 		}
 	}
 
