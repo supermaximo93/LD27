@@ -11,6 +11,8 @@ package
 		[Embed(source = "assets/images/sky_turkeys.png")] private static var skyTurkeysSprite:Class
 		[Embed(source = "assets/images/extreme.png")] private static var extremeSprite:Class
 		
+		private var _startedKongregateConnection:Boolean;
+		
 		private static const HELP_TEXT:Array = [
 			"ARROW KEYS TO MOVE",
 			"SPACE TO FIRE",
@@ -41,10 +43,17 @@ package
 			text = new FlxText(227, 224, 100, "@SUPERMAXIMO93");
 			text.color = 0xFF000000;
 			add(text);
+			_startedKongregateConnection = false;
 		}
 		
 		public override function update():void
 		{
+			if (!_startedKongregateConnection && Main.kongregate == null)
+			{
+				Main.initializeKongregate(null, null);
+				_startedKongregateConnection = true;
+			}
+			
 			BackgroundParticle.getNewBackgroundParticle();
 			if (FlxG.keys.SPACE)
 				FlxG.switchState(new PlayState);
