@@ -1,6 +1,7 @@
 package  
 {
 	import org.flixel.*;
+	import com.newgrounds.*;
 	
 	/**
 	 * ...
@@ -17,12 +18,17 @@ package
 		private var _levelText:FlxText;
 		private var _restartText:FlxText;
 		private var _menuText:FlxText;
+		private var _newgroundsStatusText:FlxText;
+		private var _scorePostSubmitted:Boolean;
+		private var _scorePosted:Boolean;
 		
 		public function ResultsState(score:int, target:int, level:int)
 		{
 			_score = score;
 			_target = target;
 			_level = level;
+			_scorePostSubmitted = false;
+			_scorePosted = false;
 		}
 		
 		public override function create():void
@@ -53,16 +59,41 @@ package
 			_menuText = new FlxText(0, screenCenterY + 70, 300, "PRESS SPACE TO GO TO MENU");
 			Utils.centerAndColorText(_menuText);
 			add(_menuText);
+			
+			_restartText.visible = false;
+			_menuText.visible = false;
+			_newgroundsStatusText = new FlxText(0, _restartText.y, 300, "SENDING SCORE...");
+			Utils.centerAndColorText(_newgroundsStatusText);
+			add(_newgroundsStatusText);
 		}
 		
 		public override function update():void
 		{
+			if (!_scorePostSubmitted)
+			{
+				API.addEventListener(APIEvent.SCORE_POSTED, onScorePosted);
+				API.postScore("High Scores", _score);
+				_scorePostSubmitted = true;
+			}
+			
 			BackgroundParticle.getNewBackgroundParticle();
-			if (FlxG.keys.SPACE)
-				FlxG.switchState(new MenuState);
-			if (FlxG.keys.R)
-				FlxG.switchState(new PlayState);
+			
+			if (_scorePosted)
+			{
+				if (FlxG.keys.SPACE)
+					FlxG.switchState(new MenuState);
+				if (FlxG.keys.R)
+					FlxG.switchState(new PlayState);
+			}
 			super.update();
+		}
+		
+		private function onScorePosted(event:APIEvent):void
+		{
+			_scorePosted = true;
+			_newgroundsStatusText.visible = false;
+			_restartText.visible = true;
+			_menuText.visible = true;
 		}
 	}
 

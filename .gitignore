@@ -8,3 +8,5 @@ bin-release/
 obj/
 assets/
 illustrator_files/
+lib/
+Keys.as

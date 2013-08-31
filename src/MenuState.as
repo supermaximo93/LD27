@@ -17,21 +17,25 @@ package
 			"REACH THE GOAL SCORE WITHIN 10 SECONDS",
 			"THE GOAL SCORE INCREASES WHEN YOU BEAT IT",
 			"BLOW STUFF UP AND DON'T DIE TO BUILD COMBOS",
-			"PRESS SPACE TO START"
-		]
+			"PRESS SPACE TO START",
+			"PRESS ENTER TO VIEW HIGH SCORES"
+		];
 		
 		public override function create():void
 		{
 			FlxG.bgColor = 0xFFFFB8B3;
-			FlxG.playMusic(music);
-			FlxG.music.ID = Main.MENU_MUSIC_ID;
+			if (FlxG.music == null || FlxG.music.ID != Main.MENU_MUSIC_ID)
+			{
+				FlxG.playMusic(music);
+				FlxG.music.ID = Main.MENU_MUSIC_ID;
+			}
 			add(BackgroundParticle.backgroundParticles);
-			add(new FlxSprite(15, 20, skyTurkeysSprite));
-			add(new FlxSprite(125, 60, extremeSprite));
+			add(new FlxSprite(15, 5, skyTurkeysSprite));
+			add(new FlxSprite(125, 45, extremeSprite));
 			var text:FlxText;
 			for (var i:int = 0; i < HELP_TEXT.length; ++i)
 			{
-				text = new FlxText(0, 100 + (i * 20), 500, HELP_TEXT[i]);
+				text = new FlxText(0, 80 + (i * 20), 500, HELP_TEXT[i]);
 				Utils.centerAndColorText(text);
 				add(text);
 			}
@@ -48,6 +52,8 @@ package
 			BackgroundParticle.getNewBackgroundParticle();
 			if (FlxG.keys.SPACE)
 				FlxG.switchState(new PlayState);
+			else if (FlxG.keys.ENTER)
+				FlxG.switchState(new HighScoresState);
 			super.update();
 		}
 	}
